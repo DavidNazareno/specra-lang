@@ -1,0 +1,23 @@
+{
+  "name": "@specra/cli",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "specra": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "dev": "node --enable-source-maps dist/index.js"
+  },
+  "dependencies": {
+    "@specra/ai-context": "workspace:*",
+    "@specra/core": "workspace:*",
+    "@specra/ir": "workspace:*",
+    "@specra/verifier": "workspace:*",
+    "@specra/verifier-typescript": "workspace:*"
+  }
+}

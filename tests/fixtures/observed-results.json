@@ -1,0 +1,13 @@
+[
+  {
+    "expectation": "createReservation_success",
+    "outcome": "success",
+    "output": {
+      "status": "pending"
+    }
+  },
+  {
+    "expectation": "createReservation_requires_auth",
+    "outcome": "unauthorized"
+  }
+]

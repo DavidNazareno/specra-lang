@@ -1,0 +1,28 @@
+{
+  "service": "BookingApp",
+  "operations": [
+    {
+      "name": "createReservation",
+      "implemented": true
+    },
+    {
+      "name": "assignTable",
+      "implemented": false
+    }
+  ],
+  "expectations": [
+    {
+      "expectation": "createReservation_success",
+      "operation": "createReservation",
+      "outcome": "success",
+      "output": {
+        "status": "pending"
+      }
+    },
+    {
+      "expectation": "createReservation_requires_auth",
+      "operation": "createReservation",
+      "outcome": "unauthorized"
+    }
+  ]
+}

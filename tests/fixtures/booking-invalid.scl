@@ -1,0 +1,18 @@
+service BookingApp
+goal: Broken fixture
+
+entity Reservation
+id: UUID
+status: string
+end
+
+operation createReservation(Reservation) -> Reservation
+
+expectation broken_case
+operation: createReservation
+auth: invalid
+expect outcome: maybe
+end
+
+target runtime: generic
+target database: postgres

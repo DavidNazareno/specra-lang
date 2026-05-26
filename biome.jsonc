@@ -1,0 +1,159 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 80,
+    "attributePosition": "auto"
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "a11y": {
+        "useHtmlLang": "warn", // Not in recommended ruleset, turning on manually
+        "noHeaderScope": "warn", // Not in recommended ruleset, turning on manually
+        "useValidAriaRole": {
+          "level": "warn",
+          "options": {
+            "ignoreNonDom": false,
+            "allowInvalidRoles": ["none", "text"]
+          }
+        },
+        "useSemanticElements": "off", // Rule is buggy, revisit later
+        "noSvgWithoutTitle": "off", // We do not intend to adhere to this rule
+        "useMediaCaption": "off", // We would need a cultural change to turn this on
+        "noAutofocus": "off", // We're highly intentional about when we use autofocus
+        "noBlankTarget": "off", // Covered by Conformance
+        "useFocusableInteractive": "off", // Disable focusable interactive element requirement
+        "useAriaPropsForRole": "off", // Disable required ARIA attributes check
+        "useKeyWithClickEvents": "off" // Disable keyboard event requirement with click events
+      },
+      "complexity": {
+        "noUselessStringConcat": "warn", // Not in recommended ruleset, turning on manually
+        "noForEach": "off", // forEach is too familiar to ban
+        "noUselessSwitchCase": "off", // Turned off due to developer preferences
+        "noUselessThisAlias": "off", // Turned off due to developer preferences
+        "noBannedTypes": "off"
+      },
+      "correctness": {
+        "noUnusedImports": "off", // Deactivated in Astro to prevent imports used in templates from being deleted
+        "useArrayLiterals": "warn", // TypeScript Standard: Usar literales de array
+        "noNewSymbol": "warn", // TypeScript Standard: No usar new Symbol()
+        "noConstAssign": "warn", // TypeScript Standard: No reasignar constantes
+        "noEmptyCharacterClassInRegex": "warn", // TypeScript Standard: No clases de caracteres vacías en regex
+        "noEmptyPattern": "warn", // TypeScript Standard: No patrones de destructuring vacíos
+        "noGlobalObjectCalls": "warn", // TypeScript Standard: No llamar objetos globales como funciones
+        "noInnerDeclarations": "warn", // TypeScript Standard: No declaraciones internas
+        "noInvalidConstructorSuper": "warn", // TypeScript Standard: Super válido en constructores
+        "noNonoctalDecimalEscape": "warn", // TypeScript Standard: No escapes decimales no octales
+        "noPrecisionLoss": "warn", // TypeScript Standard: No pérdida de precisión numérica
+        "noSetterReturn": "warn", // TypeScript Standard: No return en setters
+        "noSwitchDeclarations": "warn", // TypeScript Standard: No declaraciones en switch sin bloques
+        "noUndeclaredVariables": "warn", // TypeScript Standard: No variables no declaradas
+        "noUnreachable": "warn", // TypeScript Standard: No código inalcanzable
+        "noUnreachableSuper": "warn", // TypeScript Standard: No super inalcanzable
+        "noUnsafeFinally": "warn", // TypeScript Standard: No control flow inseguro en finally
+        "noUnsafeOptionalChaining": "warn", // TypeScript Standard: Optional chaining seguro
+        "noUnusedLabels": "warn", // TypeScript Standard: No labels no utilizados
+        "noUnusedVariables": "off", // Deactivated in Astro to prevent frontmatter variables from being marked as unused
+        "useIsNan": "warn", // TypeScript Standard: Usar isNaN para comparaciones
+        "useValidForDirection": "warn", // TypeScript Standard: Dirección válida en for loops
+        "useYield": "warn", // TypeScript Standard: Usar yield en generators
+        "useJsxKeyInIterable": "off", // Rule is buggy, revisit later
+        "useExhaustiveDependencies": "off", // Community feedback on this rule has been poor, we will continue with ESLint
+        "noUnnecessaryContinue": "off" // Turned off due to developer preferences
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "off" // Covered by Conformance
+      },
+      "style": {
+        "useFragmentSyntax": "warn", // TypeScript Standard: Usar sintaxis de Fragment
+        "noYodaExpression": "warn", // TypeScript Standard: No expresiones Yoda
+        "useDefaultParameterLast": "warn", // TypeScript Standard: Parámetros por defecto al final
+        "noArguments": "warn", // TypeScript Standard: No usar arguments, usar rest parameters
+        "noCommaOperator": "warn", // TypeScript Standard: No usar operador coma
+        "noImplicitBoolean": "warn", // TypeScript Standard: No conversiones booleanas implícitas
+        "noInferrableTypes": "warn", // TypeScript Standard: No tipos inferibles explícitos
+        "noNamespace": "warn", // TypeScript Standard: No usar namespace
+        "noNegationElse": "warn", // TypeScript Standard: No negación en else
+        "noNonNullAssertion": "warn", // TypeScript Standard: Evitar non-null assertion
+        "noParameterAssign": "warn", // TypeScript Standard: No reasignar parámetros
+        "noParameterProperties": "warn", // TypeScript Standard: No parameter properties
+        "noRestrictedGlobals": "warn", // TypeScript Standard: No globales restringidos
+        "noShoutyConstants": "warn", // TypeScript Standard: No constantes en mayúsculas
+        "noVar": "warn", // TypeScript Standard: No usar var
+        "useAsConstAssertion": "warn", // TypeScript Standard: Usar as const
+        "useBlockStatements": "warn", // TypeScript Standard: Usar bloques de declaraciones
+        "useCollapsedElseIf": "warn", // TypeScript Standard: Usar else if colapsado
+        "useConsistentArrayType": "warn", // TypeScript Standard: Tipo de array consistente
+        "useConst": "warn", // TypeScript Standard: Usar const cuando sea posible
+        "useEnumInitializers": "warn", // TypeScript Standard: Inicializadores en enums
+        "useForOf": "warn", // TypeScript Standard: Usar for...of
+        "useImportType": "warn", // TypeScript Standard: Usar import type
+        "useLiteralEnumMembers": "warn", // TypeScript Standard: Miembros literales en enums
+        "useNodejsImportProtocol": "warn", // TypeScript Standard: Protocolo de import de Node.js
+        "useNumberNamespace": "warn", // TypeScript Standard: Usar Number namespace
+        "useNumericLiterals": "warn", // TypeScript Standard: Usar literales numéricos
+        "useSelfClosingElements": "warn", // TypeScript Standard: Elementos auto-cerrados
+        "useShorthandArrayType": "warn", // TypeScript Standard: Tipo de array abreviado
+        "useShorthandAssign": "warn", // TypeScript Standard: Asignación abreviada
+        "useSingleCaseStatement": "warn", // TypeScript Standard: Una declaración por case
+        "useSingleVarDeclarator": "warn", // TypeScript Standard: Un declarador por variable
+        "useTemplate": "warn", // TypeScript Standard: Usar template literals
+        "useWhile": "warn", // TypeScript Standard: Usar while apropiadamente
+        "useExponentiationOperator": "off", // Obscure and arguably not easily readable
+        "noUnusedTemplateLiteral": "off", // Stylistic opinion
+        "noUselessElse": "off" // Stylistic opinion
+      },
+      "suspicious": {
+        "noExplicitAny": "warn", // TypeScript Standard: Evitar uso de 'any' explícito
+        "noArrayIndexKey": "warn", // TypeScript Standard: Evitar usar índices de array como keys
+        "noAssignInExpressions": "warn", // TypeScript Standard: Evitar asignaciones en expresiones
+        "noAsyncPromiseExecutor": "warn", // TypeScript Standard: Evitar async en Promise executor
+        "noCatchAssign": "warn", // TypeScript Standard: No reasignar parámetros de catch
+        "noClassAssign": "warn", // TypeScript Standard: No reasignar clases
+        "noCommentText": "warn", // TypeScript Standard: Evitar texto en comentarios HTML
+        "noCompareNegZero": "warn", // TypeScript Standard: No comparar con -0
+        "noConsoleLog": "off", // Permitir console.log en desarrollo
+        "noControlCharactersInRegex": "warn", // TypeScript Standard: No caracteres de control en regex
+        "noDebugger": "warn", // TypeScript Standard: No usar debugger
+        "noDuplicateCase": "warn", // TypeScript Standard: No casos duplicados en switch
+        "noDuplicateClassMembers": "warn", // TypeScript Standard: No miembros duplicados en clases
+        "noDuplicateObjectKeys": "warn", // TypeScript Standard: No claves duplicadas en objetos
+        "noDuplicateParameters": "warn", // TypeScript Standard: No parámetros duplicados
+        "noEmptyBlockStatements": "warn", // TypeScript Standard: No bloques vacíos
+        "noFallthroughSwitchClause": "warn", // TypeScript Standard: No fallthrough en switch
+        "noFunctionAssign": "warn", // TypeScript Standard: No reasignar funciones
+        "noImportAssign": "warn", // TypeScript Standard: No reasignar imports
+        "noLabelVar": "warn", // TypeScript Standard: No variables con nombres de labels
+        "noMisleadingCharacterClass": "warn", // TypeScript Standard: No clases de caracteres confusas
+        "noPrototypeBuiltins": "warn", // TypeScript Standard: No usar métodos de prototype directamente
+        "noRedeclare": "warn", // TypeScript Standard: No redeclarar variables
+        "noShadowRestrictedNames": "warn", // TypeScript Standard: No sombrear nombres restringidos
+        "noUnsafeNegation": "warn" // TypeScript Standard: No negación insegura
+      },
+      "nursery": {
+        "noStaticElementInteractions": "warn",
+        "noHeadImportInDocument": "warn",
+        "noDocumentImportInPage": "warn",
+        "noDuplicateElseIf": "warn",
+        "noIrregularWhitespace": "warn",
+        "useValidAutocomplete": "warn"
+      }
+    }
+  },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "defaultBranch": "main",
+    "useIgnoreFile": true
+  },
+  "organizeImports": { "enabled": false },
+  "files": {
+    "ignore": [".nx", "generated", "generated-node", "node_modules", "**/dist"]
+  }
+}

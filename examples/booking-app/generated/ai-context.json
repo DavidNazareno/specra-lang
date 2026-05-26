@@ -1,0 +1,106 @@
+{
+  "service": "BookingApp",
+  "goal": "Manage restaurant reservations with a simple operational dashboard",
+  "entities": [
+    {
+      "name": "Reservation",
+      "fields": [
+        {
+          "name": "id",
+          "type": "UUID"
+        },
+        {
+          "name": "customerName",
+          "type": "string"
+        },
+        {
+          "name": "date",
+          "type": "string"
+        },
+        {
+          "name": "partySize",
+          "type": "number"
+        },
+        {
+          "name": "status",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "TableAssignment",
+      "fields": [
+        {
+          "name": "id",
+          "type": "UUID"
+        },
+        {
+          "name": "reservationId",
+          "type": "UUID"
+        },
+        {
+          "name": "tableLabel",
+          "type": "string"
+        },
+        {
+          "name": "assignedBy",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "operations": [
+    {
+      "name": "createReservation",
+      "input": [
+        "Reservation"
+      ],
+      "output": "Reservation"
+    },
+    {
+      "name": "assignTable",
+      "input": [
+        "Reservation",
+        "TableAssignment"
+      ],
+      "output": "Result"
+    }
+  ],
+  "constraints": {
+    "auth_required": true,
+    "audited": true,
+    "p95_latency_ms": 200
+  },
+  "target": {
+    "runtime": "generic",
+    "database": "postgres"
+  },
+  "expectations": [
+    {
+      "name": "createReservation_success",
+      "operation": "createReservation",
+      "auth": "valid",
+      "assertions": [
+        {
+          "target": "outcome",
+          "value": "success"
+        },
+        {
+          "target": "output.status",
+          "value": "pending"
+        }
+      ]
+    },
+    {
+      "name": "createReservation_requires_auth",
+      "operation": "createReservation",
+      "auth": "missing",
+      "assertions": [
+        {
+          "target": "outcome",
+          "value": "unauthorized"
+        }
+      ]
+    }
+  ]
+}

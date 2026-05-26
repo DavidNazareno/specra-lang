@@ -1,0 +1,23 @@
+{
+  "$schema": "./node_modules/nx/schemas/project-schema.json",
+  "name": "specra-lang",
+  "targets": {
+    "lint": {
+      "command": "biome check ."
+    },
+    "format": {
+      "command": "biome format --write ."
+    },
+    "test": {
+      "dependsOn": [
+        "@specra/ast:build",
+        "@specra/core:build",
+        "@specra/ir:build",
+        "@specra/ai-context:build",
+        "@specra/verifier:build",
+        "@specra/verifier-typescript:build"
+      ],
+      "command": "node --test tests/**/*.test.mjs"
+    }
+  }
+}
