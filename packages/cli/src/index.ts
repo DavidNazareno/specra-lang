@@ -1,286 +1,158 @@
 #!/usr/bin/env node
-import { mkdir, readFile, writeFile } from "node:fs/promises";
-import path from "node:path";
+import { Command } from "commander";
+
+import { defaultSpecDir } from "./config.js";
+import { initializeSpecraProject } from "./commands/init.js";
 import {
-  createAiContext,
-  renderAiImplementationBrief,
-} from "@specra/ai-context";
-import { parseDocument, validateDocument } from "@specra/core";
-import { createVerificationPlan, normalizeDocument } from "@specra/ir";
+  installAgentInstructions,
+  uninstallAgentInstructions,
+} from "./commands/install.js";
 import {
-  renderVerificationReport,
-  verifyObservedResults,
-} from "@specra/verifier";
-import {
-  createSnapshotTemplate,
-  extractObservedResultsFromSnapshot,
-} from "@specra/verifier-typescript";
+  checkSpec,
+  extractTypeScriptResults,
+  generateArtifacts,
+  inspectSpec,
+  printSnapshotTemplate,
+  renderContext,
+  runTrial,
+  verifySpec,
+} from "./commands/spec.js";
+import { fileExists } from "./lib/fs.js";
+import { resolveInputFile } from "./lib/spec-paths.js";
+import type { CliOptions } from "./types.js";
 
-interface CliOptions {
-  impl?: string;
-  out?: string;
-  results?: string;
-}
+const program = new Command();
 
-async function main(): Promise<void> {
-  const [command, inputFile, ...rest] = process.argv.slice(2);
+program
+  .name("specra")
+  .description(
+    "Intent-first specification and verification CLI for AI-assisted development",
+  );
 
-  if (!command || !inputFile) {
-    printUsage();
-    process.exitCode = 1;
-    return;
-  }
+program
+  .command("init")
+  .argument("[project-dir]")
+  .option("--name <serviceName>")
+  .option("--runtime <runtime>")
+  .option("--database <database>")
+  .option("--force")
+  .action(async (projectDir: string | undefined, ...args: unknown[]) => {
+    const command = getCommandFromActionArgs(args);
+    const options = command.opts<CliOptions>();
+    await initializeSpecraProject(projectDir ?? process.cwd(), options);
+  });
 
-  const options = parseOptions(rest);
-  const source = await readFile(inputFile, "utf8");
-  const document = parseDocument(source);
-  const issues = validateDocument(document);
+program
+  .command("install")
+  .option("--target <targets>")
+  .option("--location <location>")
+  .option("--print-config <target>")
+  .option("--yes")
+  .action(async (...args: unknown[]) => {
+    const command = getCommandFromActionArgs(args);
+    const options = command.opts<CliOptions>();
+    await installAgentInstructions(process.cwd(), options);
+  });
 
-  if (command === "inspect") {
-    console.log(JSON.stringify(document, null, 2));
-    return;
-  }
+program
+  .command("uninstall")
+  .option("--target <targets>")
+  .option("--location <location>")
+  .action(async (...args: unknown[]) => {
+    const command = getCommandFromActionArgs(args);
+    const options = command.opts<CliOptions>();
+    await uninstallAgentInstructions(process.cwd(), options);
+  });
 
-  if (command === "check") {
-    if (issues.length > 0) {
-      printIssues(issues);
-      process.exitCode = 1;
-      return;
-    }
+program
+  .command("inspect")
+  .argument("[file]")
+  .action(async (inputFile: string | undefined) => {
+    await inspectSpec(await resolveRequiredInputFile("inspect", inputFile));
+  });
 
-    console.log(
-      `Spec OK: ${document.service ?? "UnnamedService"} with ${document.entities.length} entities and ${document.operations.length} operations.`,
+program
+  .command("check")
+  .argument("[file]")
+  .action(async (inputFile: string | undefined) => {
+    process.exitCode = await checkSpec(
+      await resolveRequiredInputFile("check", inputFile),
     );
-    return;
-  }
+  });
 
-  if (command === "context") {
-    if (issues.length > 0) {
-      printIssues(issues);
-      process.exitCode = 1;
-      return;
-    }
-
-    const model = normalizeDocument(document);
-    console.log(
-      JSON.stringify(
-        {
-          context: createAiContext(model),
-          brief: renderAiImplementationBrief(model),
-        },
-        null,
-        2,
-      ),
+program
+  .command("context")
+  .argument("[file]")
+  .action(async (inputFile: string | undefined) => {
+    process.exitCode = await renderContext(
+      await resolveRequiredInputFile("context", inputFile),
     );
-    return;
-  }
+  });
 
-  if (command === "generate") {
-    if (issues.length > 0) {
-      printIssues(issues);
-      process.exitCode = 1;
-      return;
-    }
-
-    const outDir = options.out ?? "generated/specra-app";
-    const files = createGenericFiles(document);
-    for (const file of files) {
-      const outputPath = path.join(outDir, file.path);
-      await mkdir(path.dirname(outputPath), { recursive: true });
-      await writeFile(outputPath, file.content, "utf8");
-    }
-
-    console.log(`Generated ${files.length} files in ${outDir}`);
-    return;
-  }
-
-  if (command === "extract-typescript") {
-    if (issues.length > 0) {
-      printIssues(issues);
-      process.exitCode = 1;
-      return;
-    }
-
-    if (!options.impl) {
-      console.error('Missing "--impl <snapshot.json>" for extract-typescript.');
-      process.exitCode = 1;
-      return;
-    }
-
-    const model = normalizeDocument(document);
-    const rawSnapshot = await readFile(options.impl, "utf8");
-    const snapshot = JSON.parse(rawSnapshot) as Parameters<
-      typeof extractObservedResultsFromSnapshot
-    >[1];
-    const extraction = extractObservedResultsFromSnapshot(model, snapshot);
-
-    console.log(
-      JSON.stringify(
-        {
-          observedResults: extraction.observedResults,
-          warnings: extraction.warnings,
-        },
-        null,
-        2,
-      ),
+program
+  .command("trial")
+  .argument("[file]")
+  .option("--out <directory>")
+  .option("--impl <snapshotPath>")
+  .option("--results <resultsPath>")
+  .action(async (inputFile: string | undefined, ...args: unknown[]) => {
+    const command = getCommandFromActionArgs(args);
+    const options = command.opts<CliOptions>();
+    process.exitCode = await runTrial(
+      await resolveRequiredInputFile("trial", inputFile),
+      options,
     );
-    return;
-  }
+  });
 
-  if (command === "snapshot-template") {
-    if (issues.length > 0) {
-      printIssues(issues);
-      process.exitCode = 1;
-      return;
-    }
+program
+  .command("snapshot-template")
+  .argument("[file]")
+  .action(async (inputFile: string | undefined) => {
+    process.exitCode = await printSnapshotTemplate(
+      await resolveRequiredInputFile("snapshot-template", inputFile),
+    );
+  });
 
-    const model = normalizeDocument(document);
-    console.log(JSON.stringify(createSnapshotTemplate(model), null, 2));
-    return;
-  }
+program
+  .command("extract-typescript")
+  .argument("[file]")
+  .option("--impl <snapshotPath>")
+  .action(async (inputFile: string | undefined, ...args: unknown[]) => {
+    const command = getCommandFromActionArgs(args);
+    const options = command.opts<CliOptions>();
+    process.exitCode = await extractTypeScriptResults(
+      await resolveRequiredInputFile("extract-typescript", inputFile),
+      options,
+    );
+  });
 
-  if (command === "verify") {
-    if (issues.length > 0) {
-      printIssues(issues);
-      process.exitCode = 1;
-      return;
-    }
+program
+  .command("generate")
+  .argument("[file]")
+  .option("--out <directory>")
+  .action(async (inputFile: string | undefined, ...args: unknown[]) => {
+    const command = getCommandFromActionArgs(args);
+    const options = command.opts<CliOptions>();
+    process.exitCode = await generateArtifacts(
+      await resolveRequiredInputFile("generate", inputFile),
+      options,
+    );
+  });
 
-    if (!options.results) {
-      console.error('Missing "--results <file.json>" for verify.');
-      process.exitCode = 1;
-      return;
-    }
+program
+  .command("verify")
+  .argument("[file]")
+  .option("--results <resultsPath>")
+  .action(async (inputFile: string | undefined, ...args: unknown[]) => {
+    const command = getCommandFromActionArgs(args);
+    const options = command.opts<CliOptions>();
+    process.exitCode = await verifySpec(
+      await resolveRequiredInputFile("verify", inputFile),
+      options,
+    );
+  });
 
-    const rawResults = await readFile(options.results, "utf8");
-    const observedResults = JSON.parse(rawResults) as Parameters<
-      typeof verifyObservedResults
-    >[1];
-    const model = normalizeDocument(document);
-    const report = verifyObservedResults(model, observedResults);
-
-    console.log(renderVerificationReport(report));
-    if (report.summary.failed > 0 || report.summary.missing > 0) {
-      process.exitCode = 1;
-    }
-    return;
-  }
-
-  printUsage();
-  process.exitCode = 1;
-}
-
-function parseOptions(args: string[]): CliOptions {
-  const options: CliOptions = {};
-
-  for (let index = 0; index < args.length; index += 1) {
-    const token = args[index];
-    const value = args[index + 1];
-
-    if (token === "--out" && value) {
-      options.out = value;
-      index += 1;
-      continue;
-    }
-
-    if (token === "--impl" && value) {
-      options.impl = value;
-      index += 1;
-      continue;
-    }
-
-    if (token === "--results" && value) {
-      options.results = value;
-      index += 1;
-    }
-  }
-
-  return options;
-}
-
-function printIssues(issues: string[]): void {
-  console.error("Validation failed:");
-  for (const issue of issues) {
-    console.error(`- ${issue}`);
-  }
-}
-
-function printUsage(): void {
-  console.log(`Usage:
-  specra inspect <file.scl>
-  specra check <file.scl>
-  specra context <file.scl>
-  specra snapshot-template <file.scl>
-  specra extract-typescript <file.scl> --impl implementation-snapshot.json
-  specra generate <file.scl> --out generated/my-app
-  specra verify <file.scl> --results observed-results.json`);
-}
-
-function createGenericFiles(document: ReturnType<typeof parseDocument>) {
-  const serviceName = document.service ?? "unnamed-service";
-  const model = normalizeDocument(document);
-  const verificationPlan = createVerificationPlan(model);
-  const aiContext = createAiContext(model);
-  const aiBrief = renderAiImplementationBrief(model);
-  const summary = [
-    `# ${serviceName}`,
-    "",
-    document.goal,
-    "",
-    "## Entities",
-    ...document.entities.map(
-      (entity) =>
-        `- ${entity.name}: ${entity.fields.map((field) => `${field.name}:${field.type}`).join(", ")}`,
-    ),
-    "",
-    "## Operations",
-    ...document.operations.map(
-      (operation) =>
-        `- ${operation.name}(${operation.input.join(", ")}) -> ${operation.output}`,
-    ),
-    "",
-    "## Expectations",
-    ...document.expectations.map(
-      (expectation) =>
-        `- ${expectation.name}: operation=${expectation.operation ?? "missing"}, assertions=${expectation.assertions.length}`,
-    ),
-    "",
-    "## Constraints",
-    ...Object.entries(document.constraints).map(
-      ([key, value]) => `- ${key}: ${String(value)}`,
-    ),
-    "",
-    "## Target",
-    ...Object.entries(document.target).map(
-      ([key, value]) => `- ${key}: ${String(value)}`,
-    ),
-  ].join("\n");
-
-  return [
-    {
-      path: "specra.json",
-      content: `${JSON.stringify(document, null, 2)}\n`,
-    },
-    {
-      path: "SUMMARY.md",
-      content: `${summary}\n`,
-    },
-    {
-      path: "verification-plan.json",
-      content: `${JSON.stringify(verificationPlan, null, 2)}\n`,
-    },
-    {
-      path: "ai-context.json",
-      content: `${JSON.stringify(aiContext, null, 2)}\n`,
-    },
-    {
-      path: "AI-BRIEF.md",
-      content: aiBrief,
-    },
-  ];
-}
-
-void main().catch((error: unknown) => {
+void program.parseAsync(process.argv).catch((error: unknown) => {
   if (error instanceof Error) {
     console.error(error.message);
   } else {
@@ -288,3 +160,30 @@ void main().catch((error: unknown) => {
   }
   process.exitCode = 1;
 });
+
+async function resolveRequiredInputFile(
+  command: string,
+  explicitInput: string | undefined,
+): Promise<string> {
+  const inputFile = resolveInputFile(command, explicitInput);
+  if (!inputFile) {
+    throw new Error(`Command "${command}" requires a spec file.`);
+  }
+
+  if (!explicitInput && !(await fileExists(inputFile))) {
+    throw new Error(
+      `No spec input was provided and "${defaultSpecDir}/" was not found. Run "specra init" first or pass a .scl.md file, legacy .scl file, or folder explicitly.`,
+    );
+  }
+
+  return inputFile;
+}
+
+function getCommandFromActionArgs(args: unknown[]): Command {
+  const command = args.at(-1);
+  if (command instanceof Command) {
+    return command;
+  }
+
+  throw new Error("Unable to read commander action context.");
+}

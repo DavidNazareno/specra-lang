@@ -1,11 +1,23 @@
-# `.scl` Language Guide
+# `.scl.md` Language Guide
 
-Specra source files use the `.scl` extension.
+Specra source files now prefer the `.scl.md` extension. Legacy plain `.scl` files are still supported.
+
+In `.scl.md` files, Specra reads only fenced code blocks labeled `specra`.
+
+````md
+# Example
+
+```specra
+service ExampleApp
+goal: Describe the core workflow
+```
+````
 
 ## Top-level statements
 
 Allowed top-level statements:
 
+- `import "./relative/path.scl.md"`
 - `service Name`
 - `goal: text`
 - `entity Name ... end`
@@ -15,6 +27,23 @@ Allowed top-level statements:
 - `target key: value`
 
 Anything else is rejected by the parser.
+
+## Imports
+
+Use imports to split a contract across multiple `.scl.md` files.
+
+```txt
+import "./features/work-items.scl.md"
+import "./shared/auth.scl.md"
+```
+
+Rules:
+
+- Imports must be a whole line: `import "./relative/path.scl.md"`
+- Imported paths are resolved relative to the file that declares them
+- Imports are recursive
+- Circular imports are rejected
+- When you run Specra against a folder such as `specra/`, root `.scl.md` files act as entrypoints and their imports pull in the rest of the contract graph
 
 ## Entities
 
@@ -124,4 +153,4 @@ Specra currently enforces a strict block grammar:
 - no top-level fields
 - no free-form lines inside expectation blocks
 
-This strictness is intentional. The current goal is to keep `.scl` small, explicit, and easy to validate.
+This strictness is intentional. The current goal is to keep Specra contracts small, explicit, and easy to validate.

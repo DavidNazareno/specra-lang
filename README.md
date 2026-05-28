@@ -31,11 +31,11 @@ This repository currently includes:
 
 ## Documentation
 
-- [Current Stable Surface](/Users/davidnazareno/Documents/Codex/2026-05-26/sabes-que-estaba-pensando-que-esta/docs/current-stable-surface.md)
-- [`.scl` Language Guide](/Users/davidnazareno/Documents/Codex/2026-05-26/sabes-que-estaba-pensando-que-esta/docs/language-scl.md)
-- [Verification Workflow](/Users/davidnazareno/Documents/Codex/2026-05-26/sabes-que-estaba-pensando-que-esta/docs/verification-workflow.md)
-- [Versioning And Releases](/Users/davidnazareno/Documents/Codex/2026-05-26/sabes-que-estaba-pensando-que-esta/docs/versioning-and-releases.md)
-- [Publishing Checklist](/Users/davidnazareno/Documents/Codex/2026-05-26/sabes-que-estaba-pensando-que-esta/docs/publishing-checklist.md)
+- [Current Stable Surface](docs/current-stable-surface.md)
+- [`.scl` Language Guide](docs/language-scl.md)
+- [Verification Workflow](docs/verification-workflow.md)
+- [Versioning And Releases](docs/versioning-and-releases.md)
+- [Publishing Checklist](docs/publishing-checklist.md)
 
 ## Repository layout
 
@@ -114,12 +114,14 @@ pnpm graph
 pnpm lint
 pnpm test
 pnpm changeset
-pnpm specra check examples/booking-app/app.scl
-pnpm specra inspect examples/booking-app/app.scl
-pnpm specra context examples/booking-app/app.scl
-pnpm specra snapshot-template examples/booking-app/app.scl
-pnpm specra extract-typescript examples/booking-app/app.scl --impl tests/fixtures/typescript-implementation-snapshot.json
-pnpm specra generate examples/booking-app/app.scl --out examples/booking-app/generated
+pnpm specra init
+pnpm specra install --target codex,claude,opencode --location local
+pnpm specra check
+pnpm specra context
+pnpm specra trial --out specra/generated
+pnpm specra snapshot-template
+pnpm specra extract-typescript --impl tests/fixtures/typescript-implementation-snapshot.json
+pnpm specra generate --out specra/generated
 ```
 
 The generated verification artifacts now include:
@@ -129,6 +131,44 @@ The generated verification artifacts now include:
 - `verification-plan.json`
 - `ai-context.json`
 - `AI-BRIEF.md`
+
+The new `trial` flow also scaffolds:
+
+- `implementation-snapshot.template.json`
+- `observed-results.template.json`
+- `verification-report.txt`
+- `TRIAL.md`
+
+## In a real app repository
+
+The intended setup is to keep Specra inside the same repository as your app.
+
+```txt
+my-next-app/
+  app/
+  components/
+  specra/
+    service.scl.md
+    features/
+      work-items.scl.md
+    README.md
+```
+
+Start with:
+
+```bash
+pnpm specra init
+```
+
+That creates `specra/` as the contract root, with a shared `service.scl.md`, a first feature slice under `specra/features/`, and `specra/README.md` for the local workflow. The root file already imports the feature file, so the default shape is ready for multi-file contracts. During `specra init`, Specra also installs local agent guidance automatically for supported agents it detects on your machine. After that, the CLI defaults to `specra/`, so `pnpm specra check` and `pnpm specra trial --out specra/generated` work without repeating the input path.
+
+If you prefer user-wide instructions instead of per-project files:
+
+```bash
+pnpm specra install --target codex,claude,opencode --location global
+```
+
+Today Specra verifies observed results against the contract. Automatic extraction from live Next.js tests is still a future step, so the current bridge into verification is the generated snapshot or observed-results templates.
 
 ## Current package roles
 
@@ -150,7 +190,7 @@ The generated verification artifacts now include:
 
 ## Community
 
-- [Contributing Guide](/Users/davidnazareno/Documents/Codex/2026-05-26/sabes-que-estaba-pensando-que-esta/CONTRIBUTING.md)
-- [Code of Conduct](/Users/davidnazareno/Documents/Codex/2026-05-26/sabes-que-estaba-pensando-que-esta/CODE_OF_CONDUCT.md)
-- [Changelog](/Users/davidnazareno/Documents/Codex/2026-05-26/sabes-que-estaba-pensando-que-esta/CHANGELOG.md)
-- [Changesets Guide](/Users/davidnazareno/Documents/Codex/2026-05-26/sabes-que-estaba-pensando-que-esta/.changeset/README.md)
+- [Contributing Guide](CONTRIBUTING.md)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+- [Changelog](CHANGELOG.md)
+- [Changesets Guide](.changeset/README.md)
