@@ -8,7 +8,7 @@ In `.scl.md` files, Specra reads only fenced code blocks labeled `specra`.
 # Example
 
 ```specra
-service ExampleApp
+service: ExampleApp
 goal: Describe the core workflow
 ```
 ````
@@ -50,7 +50,7 @@ Rules:
 Entity blocks define structured domain types.
 
 ```txt
-entity Reservation
+entity Reservation:
 id: UUID
 customerName: string
 date: string
@@ -71,8 +71,15 @@ Rules:
 Operations define intended behavior at the contract level.
 
 ```txt
-operation createReservation(Reservation) -> Reservation
-operation assignTable(Reservation, TableAssignment) -> Result
+operation createReservation:
+input: Reservation
+output: Reservation
+end
+
+operation assignTable:
+input: Reservation, TableAssignment
+output: Result
+end
 ```
 
 Rules:
@@ -80,13 +87,14 @@ Rules:
 - Operation names must be identifiers.
 - Inputs are a comma-separated list of type names.
 - Output must be an identifier.
+- Legacy single-line syntax like `operation createReservation(Reservation) -> Reservation` is still supported.
 
 ## Expectations
 
 Expectations define behavior that later verification can check.
 
 ```txt
-expectation createReservation_success
+expectation createReservation_success:
 operation: createReservation
 auth: valid
 input customerName: "Ana"

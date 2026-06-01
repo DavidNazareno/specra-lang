@@ -1,6 +1,7 @@
 # Local Trial
 
 This example is the shortest recommended path for trying Specra end-to-end.
+It intentionally stays as a compact legacy `.scl` example; new project contracts should prefer `.scl.md`.
 
 ## Run
 

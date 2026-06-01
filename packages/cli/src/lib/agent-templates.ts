@@ -16,6 +16,7 @@ When this repository contains \`specra/\`, treat the \`.scl.md\` files in that f
 ## Required workflow
 
 1. Read the relevant \`.scl.md\` files in \`specra/\` before implementing behavior.
+   If you need a quick reference, read \`specra/SYNTAX.md\`.
 2. Run \`specra check\` after changes to the spec.
 3. Run \`specra trial --out specra/generated\` to refresh:
    - \`specra/generated/ai-context.json\`

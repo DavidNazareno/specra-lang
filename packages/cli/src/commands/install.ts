@@ -16,6 +16,10 @@ import {
   writeTextFile,
 } from "../lib/fs.js";
 import {
+  removeOpencodeProjectFiles,
+  syncOpencodeProjectFiles,
+} from "../lib/opencode.js";
+import {
   removeManagedBlock,
   upsertManagedBlock,
 } from "../lib/managed-blocks.js";
@@ -49,6 +53,13 @@ export async function installAgentInstructions(
     results.push(
       path.relative(projectDir, filePath) || path.basename(filePath),
     );
+
+    if (target === "opencode") {
+      const extraPaths = await syncOpencodeProjectFiles(projectDir, location);
+      for (const extraPath of extraPaths) {
+        results.push(path.relative(projectDir, extraPath) || extraPath);
+      }
+    }
   }
 
   console.log(
@@ -92,6 +103,13 @@ export async function uninstallAgentInstructions(
     removed.push(
       path.relative(projectDir, filePath) || path.basename(filePath),
     );
+
+    if (target === "opencode") {
+      const extraPaths = await removeOpencodeProjectFiles(projectDir, location);
+      for (const extraPath of extraPaths) {
+        removed.push(path.relative(projectDir, extraPath) || extraPath);
+      }
+    }
   }
 
   console.log(

@@ -1,7 +1,7 @@
 # Reservations
 
 ```specra
-entity Reservation
+entity Reservation:
 id: UUID
 customerName: string
 date: string
@@ -9,17 +9,24 @@ partySize: number
 status: string
 end
 
-entity TableAssignment
+entity TableAssignment:
 id: UUID
 reservationId: UUID
 tableLabel: string
 assignedBy: string
 end
 
-operation createReservation(Reservation) -> Reservation
-operation assignTable(Reservation, TableAssignment) -> Result
+operation createReservation:
+input: Reservation
+output: Reservation
+end
 
-expectation createReservation_success
+operation assignTable:
+input: Reservation, TableAssignment
+output: Result
+end
+
+expectation createReservation_success:
 operation: createReservation
 auth: valid
 input customerName: "Ana"
@@ -29,7 +36,7 @@ expect outcome: success
 expect output.status: "pending"
 end
 
-expectation createReservation_requires_auth
+expectation createReservation_requires_auth:
 operation: createReservation
 auth: missing
 input customerName: "Ana"

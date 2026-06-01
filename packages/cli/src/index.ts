@@ -2,6 +2,7 @@
 import { Command } from "commander";
 
 import { defaultSpecDir } from "./config.js";
+import { printGuide } from "./commands/guide.js";
 import { initializeSpecraProject } from "./commands/init.js";
 import {
   installAgentInstructions,
@@ -28,6 +29,13 @@ program
   .description(
     "Intent-first specification and verification CLI for AI-assisted development",
   );
+
+program
+  .command("guide")
+  .description("Print a quick Specra syntax and workflow guide")
+  .action(async () => {
+    await printGuide();
+  });
 
 program
   .command("init")

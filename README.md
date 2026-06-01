@@ -21,7 +21,7 @@ This repository currently includes:
 
 - a TypeScript monorepo
 - Nx orchestration for project graph and task running
-- a minimal `.scl` parser and validator
+- a Markdown-first `.scl.md` parser and validator, with legacy `.scl` compatibility
 - a normalized semantic model
 - AI-context artifacts
 - a basic expectation verifier
@@ -32,7 +32,7 @@ This repository currently includes:
 ## Documentation
 
 - [Current Stable Surface](docs/current-stable-surface.md)
-- [`.scl` Language Guide](docs/language-scl.md)
+- [`.scl.md` Language Guide](docs/language-scl.md)
 - [Verification Workflow](docs/verification-workflow.md)
 - [Versioning And Releases](docs/versioning-and-releases.md)
 - [Publishing Checklist](docs/publishing-checklist.md)
@@ -79,7 +79,7 @@ target runtime: generic
 target database: postgres
 ```
 
-## `.scl` syntax rules
+## `.scl.md` syntax rules
 
 Top-level statements allowed:
 
@@ -173,7 +173,7 @@ Today Specra verifies observed results against the contract. Automatic extractio
 ## Current package roles
 
 - `@specra/ast`: syntax-level document types
-- `@specra/core`: parser and validator for `.scl`
+- `@specra/core`: parser and validator for `.scl.md`, with legacy `.scl` support
 - `@specra/ir`: normalized semantic model and verification plan builder
 - `@specra/ai-context`: stable context artifacts for coding agents
 - `@specra/verifier`: compares observed implementation results against expectations

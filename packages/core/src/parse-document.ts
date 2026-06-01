@@ -2,15 +2,21 @@ import type {
   SpecraDocument,
   SpecraEntity,
   SpecraExpectation,
+  SpecraOperation,
 } from "@specra/ast";
 
 import {
   assignKeyValue,
+  createExpectationBlock,
   createEmptyDocument,
+  createOperationBlock,
   parseExpectationLine,
   parseField,
+  parseNamedBlockDeclaration,
   parseNamedDeclaration,
+  parseOperationBlockLine,
   parseOperation,
+  parseServiceDeclaration,
   parseTextValue,
   type ParseScope,
 } from "./parser-utils.js";
@@ -27,21 +33,21 @@ export function parseDocument(source: string): SpecraDocument {
 
   let currentEntity: SpecraEntity | null = null;
   let currentExpectation: SpecraExpectation | null = null;
+  let currentOperation: SpecraOperation | null = null;
   let scope: ParseScope = null;
 
   for (const line of lines) {
-    if (line.value.startsWith("service ")) {
+    if (
+      line.value.startsWith("service ") ||
+      line.value.startsWith("service:")
+    ) {
       if (scope) {
         throw new Error(
           `Line ${line.lineNumber}: "service" is only allowed at the top level.`,
         );
       }
 
-      document.service = parseNamedDeclaration(
-        line.value,
-        "service",
-        line.lineNumber,
-      );
+      document.service = parseServiceDeclaration(line.value, line.lineNumber);
       continue;
     }
 
@@ -53,6 +59,24 @@ export function parseDocument(source: string): SpecraDocument {
       }
 
       document.goal = parseTextValue(line.value, "goal", line.lineNumber);
+      continue;
+    }
+
+    if (line.value.startsWith("entity ") && line.value.endsWith(":")) {
+      if (scope) {
+        throw new Error(
+          `Line ${line.lineNumber}: nested blocks are not allowed.`,
+        );
+      }
+
+      currentEntity = {
+        name: parseNamedBlockDeclaration(line.value, "entity", line.lineNumber),
+        fields: [],
+      };
+      document.entities.push(currentEntity);
+      currentExpectation = null;
+      currentOperation = null;
+      scope = "entity";
       continue;
     }
 
@@ -69,7 +93,23 @@ export function parseDocument(source: string): SpecraDocument {
       };
       document.entities.push(currentEntity);
       currentExpectation = null;
+      currentOperation = null;
       scope = "entity";
+      continue;
+    }
+
+    if (line.value.startsWith("expectation ") && line.value.endsWith(":")) {
+      if (scope) {
+        throw new Error(
+          `Line ${line.lineNumber}: nested blocks are not allowed.`,
+        );
+      }
+
+      currentExpectation = createExpectationBlock(line.value, line.lineNumber);
+      document.expectations.push(currentExpectation);
+      currentEntity = null;
+      currentOperation = null;
+      scope = "expectation";
       continue;
     }
 
@@ -89,6 +129,7 @@ export function parseDocument(source: string): SpecraDocument {
       };
       document.expectations.push(currentExpectation);
       currentEntity = null;
+      currentOperation = null;
       scope = "expectation";
       continue;
     }
@@ -102,7 +143,23 @@ export function parseDocument(source: string): SpecraDocument {
 
       currentEntity = null;
       currentExpectation = null;
+      currentOperation = null;
       scope = null;
+      continue;
+    }
+
+    if (line.value.startsWith("operation ") && line.value.endsWith(":")) {
+      if (scope) {
+        throw new Error(
+          `Line ${line.lineNumber}: nested blocks are not allowed.`,
+        );
+      }
+
+      currentOperation = createOperationBlock(line.value, line.lineNumber);
+      document.operations.push(currentOperation);
+      currentEntity = null;
+      currentExpectation = null;
+      scope = "operation";
       continue;
     }
 
@@ -154,6 +211,11 @@ export function parseDocument(source: string): SpecraDocument {
 
     if (currentExpectation && scope === "expectation") {
       parseExpectationLine(currentExpectation, line.value, line.lineNumber);
+      continue;
+    }
+
+    if (currentOperation && scope === "operation") {
+      parseOperationBlockLine(currentOperation, line.value, line.lineNumber);
       continue;
     }
 

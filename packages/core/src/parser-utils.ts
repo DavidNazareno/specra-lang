@@ -13,7 +13,7 @@ import {
   identifierPattern,
 } from "./constants.js";
 
-export type ParseScope = "entity" | "expectation" | null;
+export type ParseScope = "entity" | "expectation" | "operation" | null;
 
 export function parseQuotedString(raw: string): string {
   if (
@@ -73,6 +73,55 @@ export function parseNamedDeclaration(
   if (!identifierPattern.test(name)) {
     throw new Error(
       `Line ${lineNumber}: invalid ${keyword} name "${name}". Use letters, numbers, and underscores only.`,
+    );
+  }
+
+  return name;
+}
+
+export function parseNamedBlockDeclaration(
+  line: string,
+  keyword: string,
+  lineNumber: number,
+): string {
+  const prefix = `${keyword} `;
+  const suffix = ":";
+
+  if (!line.startsWith(prefix) || !line.endsWith(suffix)) {
+    throw new Error(
+      `Line ${lineNumber}: invalid ${keyword} block syntax "${line}". Use "${keyword} Name:".`,
+    );
+  }
+
+  const name = line.slice(prefix.length, -suffix.length).trim();
+
+  if (!identifierPattern.test(name)) {
+    throw new Error(
+      `Line ${lineNumber}: invalid ${keyword} name "${name}". Use letters, numbers, and underscores only.`,
+    );
+  }
+
+  return name;
+}
+
+export function parseServiceDeclaration(
+  line: string,
+  lineNumber: number,
+): string {
+  if (line.startsWith("service ")) {
+    return parseNamedDeclaration(line, "service", lineNumber);
+  }
+
+  if (!line.startsWith("service:")) {
+    throw new Error(
+      `Line ${lineNumber}: invalid service syntax "${line}". Use "service Name" or "service: Name".`,
+    );
+  }
+
+  const name = parseTextValue(line, "service", lineNumber);
+  if (!identifierPattern.test(name)) {
+    throw new Error(
+      `Line ${lineNumber}: invalid service name "${name}". Use letters, numbers, and underscores only.`,
     );
   }
 
@@ -142,6 +191,70 @@ export function parseOperation(
     name,
     input: splitList(inputRaw),
     output,
+  };
+}
+
+export function createOperationBlock(
+  line: string,
+  lineNumber: number,
+): SpecraOperation {
+  return {
+    name: parseNamedBlockDeclaration(line, "operation", lineNumber),
+    input: [],
+    output: "",
+  };
+}
+
+export function parseOperationBlockLine(
+  operation: SpecraOperation,
+  line: string,
+  lineNumber: number,
+): void {
+  if (line.startsWith("input:")) {
+    if (operation.input.length > 0) {
+      throw new Error(
+        `Line ${lineNumber}: operation "${operation.name}" repeats "input".`,
+      );
+    }
+
+    const input = line.slice("input:".length).trim();
+    operation.input = splitList(input);
+    return;
+  }
+
+  if (line.startsWith("output:")) {
+    if (operation.output) {
+      throw new Error(
+        `Line ${lineNumber}: operation "${operation.name}" repeats "output".`,
+      );
+    }
+
+    const output = parseTextValue(line, "output", lineNumber);
+    if (!identifierPattern.test(output)) {
+      throw new Error(
+        `Line ${lineNumber}: invalid operation output "${output}".`,
+      );
+    }
+
+    operation.output = output;
+    return;
+  }
+
+  throw new Error(
+    `Line ${lineNumber}: invalid operation syntax "${line}". Allowed keys: input, output.`,
+  );
+}
+
+export function createExpectationBlock(
+  line: string,
+  lineNumber: number,
+): SpecraExpectation {
+  return {
+    name: parseNamedBlockDeclaration(line, "expectation", lineNumber),
+    operation: null,
+    auth: null,
+    input: {},
+    assertions: [],
   };
 }
 

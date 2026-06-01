@@ -16,9 +16,9 @@ Use this checklist before creating the public GitHub repository.
 - Run `pnpm build`
 - Run `pnpm lint`
 - Run `pnpm test`
-- Run `pnpm specra check examples/booking-app/app.scl`
-- Run `pnpm specra context examples/booking-app/app.scl`
-- Run `pnpm specra verify examples/booking-app/app.scl --results tests/fixtures/observed-results.json`
+- Run `pnpm specra check examples/imports-app`
+- Run `pnpm specra context examples/imports-app`
+- Run `pnpm specra verify examples/imports-app --results tests/fixtures/observed-results.json`
 
 ## Open source readiness
 
@@ -32,7 +32,7 @@ Use this checklist before creating the public GitHub repository.
 
 ## Suggested first issues
 
-- Add richer `.scl` types such as `optional` and `list`
+- Add richer contract types such as `optional` and `list`
 - Add a verifier report output format for CI
 - Add a real TypeScript code extractor beyond snapshots
 - Add example projects for additional domains

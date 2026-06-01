@@ -4,7 +4,7 @@ Specra verification currently works in three layers.
 
 ## 1. Source contract
 
-The `.scl` file defines:
+The Specra contract defines:
 
 - entities
 - operations
@@ -25,7 +25,7 @@ These artifacts are used by coding agents or downstream tooling.
 
 When a project uses `specra install`, the generated agent guidance should direct the coding agent to:
 
-1. read the relevant `.scl` files under `specra/`
+1. read the relevant `.scl.md` files under `specra/`
 2. refresh `specra/generated/` with `specra trial`
 3. run the app's tests or reproduction steps
 4. write `specra/generated/observed-results.json`
@@ -40,7 +40,7 @@ Today the TypeScript-oriented path is snapshot-based:
 1. Generate a template:
 
 ```bash
-pnpm specra snapshot-template examples/booking-app/app.scl
+pnpm specra snapshot-template examples/imports-app
 ```
 
 2. Fill the snapshot from a TypeScript implementation or from tests.
@@ -48,13 +48,13 @@ pnpm specra snapshot-template examples/booking-app/app.scl
 3. Extract observed results:
 
 ```bash
-pnpm specra extract-typescript examples/booking-app/app.scl --impl tests/fixtures/typescript-implementation-snapshot.json
+pnpm specra extract-typescript examples/imports-app --impl tests/fixtures/typescript-implementation-snapshot.json
 ```
 
 4. Verify observed behavior against the spec:
 
 ```bash
-pnpm specra verify examples/booking-app/app.scl --results tests/fixtures/observed-results.json
+pnpm specra verify examples/imports-app --results tests/fixtures/observed-results.json
 ```
 
 ## Current verifier model
@@ -76,7 +76,7 @@ Specra does not need to generate the full application itself to be useful.
 
 The important property is this:
 
-- `.scl` defines what must be true
+- the `.scl.md` contract defines what must be true
 - the implementation produces observed results
 - Specra checks whether the implementation satisfied the declared contract
 

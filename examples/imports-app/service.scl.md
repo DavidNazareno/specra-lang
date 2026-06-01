@@ -5,7 +5,7 @@ This root contract file carries shared intent and imports the reservation featur
 ```specra
 import "./features/reservations.scl.md"
 
-service ImportsBookingApp
+service: ImportsBookingApp
 goal: Manage reservations with a contract split by feature files
 
 constraint auth_required: true

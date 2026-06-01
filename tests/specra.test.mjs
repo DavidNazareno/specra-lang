@@ -55,6 +55,66 @@ test("invalid fixture fails with a syntax error", async () => {
   }, /invalid auth mode/);
 });
 
+test("parser accepts the newer block-friendly syntax", async () => {
+  const source = `service: BookingApp
+goal: Manage restaurant reservations
+
+entity Reservation:
+id: UUID
+status: string
+end
+
+operation createReservation:
+input: Reservation
+output: Reservation
+end
+
+expectation createReservation_success:
+operation: createReservation
+auth: valid
+input status: "draft"
+expect outcome: success
+expect output.status: "draft"
+end
+
+target runtime: generic
+target database: postgres
+`;
+
+  const document = core.parseDocument(source);
+  const issues = core.validateDocument(document);
+
+  assert.equal(document.service, "BookingApp");
+  assert.equal(document.operations[0].name, "createReservation");
+  assert.deepEqual(issues, []);
+});
+
+test("parser accepts empty input lists in operation blocks", async () => {
+  const source = `service: HealthApi
+goal: Check read-only operations
+
+operation healthCheck:
+input:
+output: Result
+end
+
+expectation healthCheck_success:
+operation: healthCheck
+auth: optional
+expect outcome: success
+end
+
+target runtime: generic
+target database: unknown
+`;
+
+  const document = core.parseDocument(source);
+  const issues = core.validateDocument(document);
+
+  assert.deepEqual(document.operations[0].input, []);
+  assert.deepEqual(issues, ["At least one entity is required."]);
+});
+
 test("normalized model produces verification plan and AI context", async () => {
   const source = await readFixture("booking-valid.scl");
   const document = core.parseDocument(source);
@@ -151,6 +211,14 @@ test("cli check supports the imports example from the repository", async () => {
   assert.match(stdout, /Spec OK: ImportsBookingApp/);
 });
 
+test("cli guide prints syntax and workflow help", async () => {
+  const { stdout } = await runCli(["guide"], process.cwd());
+
+  assert.match(stdout, /# Specra Guide/);
+  assert.match(stdout, /Recommended workflow/);
+  assert.match(stdout, /service: ExampleApp/);
+});
+
 test("cli init scaffolds a specra folder for an app repository", async () => {
   const tempDir = await mkdtemp(path.join(os.tmpdir(), "specra-init-"));
   const fakeHome = path.join(tempDir, "home");
@@ -181,13 +249,18 @@ test("cli init scaffolds a specra folder for an app repository", async () => {
     "utf8",
   );
   const guide = await readFile(path.join(tempDir, "specra/README.md"), "utf8");
+  const syntaxGuide = await readFile(
+    path.join(tempDir, "specra/SYNTAX.md"),
+    "utf8",
+  );
 
   assert.match(stdout, /Initialized Specra/);
-  assert.match(serviceSpec, /service NextLaunchpad/);
+  assert.match(serviceSpec, /service: NextLaunchpad/);
   assert.match(serviceSpec, /```specra/);
   assert.match(serviceSpec, /target runtime: nextjs/);
   assert.match(featureSpec, /expectation createWorkItem_success/);
   assert.match(guide, /Suggested loop/);
+  assert.match(syntaxGuide, /# Specra Guide/);
   assert.match(stdout, /No supported agents were detected/);
 });
 
@@ -440,9 +513,17 @@ test("cli install supports local opencode instructions", async () => {
 
   const { stdout } = await runCli(["install", "--target", "opencode"], tempDir);
   const agents = await readFile(path.join(tempDir, "AGENTS.md"), "utf8");
+  const config = await readFile(path.join(tempDir, "opencode.jsonc"), "utf8");
+  const agent = await readFile(
+    path.join(tempDir, ".opencode/agents/specra.md"),
+    "utf8",
+  );
 
   assert.match(stdout, /Installed Specra agent guidance/);
   assert.match(agents, /Specra for OpenCode/);
+  assert.match(config, /"instructions"/);
+  assert.match(config, /specra\/README\.md/);
+  assert.match(agent, /Specra-guided implementation and verification workflow/);
 });
 
 test("cli install supports global opencode instructions", async () => {
@@ -463,9 +544,34 @@ test("cli install supports global opencode instructions", async () => {
     path.join(fakeHome, ".config", "opencode", "AGENTS.md"),
     "utf8",
   );
+  const config = await readFile(
+    path.join(fakeHome, ".config", "opencode", "opencode.jsonc"),
+    "utf8",
+  );
+  const agent = await readFile(
+    path.join(fakeHome, ".config", "opencode", ".opencode/agents/specra.md"),
+    "utf8",
+  );
 
   assert.match(stdout, /global mode/);
   assert.match(agents, /Specra for OpenCode/);
+  assert.match(config, /\$schema/);
+  assert.match(agent, /Specra-guided implementation and verification workflow/);
+});
+
+test("cli uninstall removes opencode project files it manages", async () => {
+  const tempDir = await mkdtemp(
+    path.join(os.tmpdir(), "specra-opencode-remove-"),
+  );
+
+  await runCli(["install", "--target", "opencode"], tempDir);
+  await runCli(["uninstall", "--target", "opencode"], tempDir);
+
+  const config = await readFile(path.join(tempDir, "opencode.jsonc"), "utf8");
+  await assert.rejects(
+    readFile(path.join(tempDir, ".opencode/agents/specra.md"), "utf8"),
+  );
+  assert.doesNotMatch(config, /specra\/README\.md/);
 });
 
 test("cli install can print a target config without writing files", async () => {
