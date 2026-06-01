@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { Command } from "commander";
 
-import { defaultSpecDir } from "./config.js";
+import { defaultProjectConfigFiles, defaultSpecDir } from "./config.js";
 import { printGuide } from "./commands/guide.js";
 import { initializeSpecraProject } from "./commands/init.js";
 import {
@@ -14,11 +14,13 @@ import {
   generateArtifacts,
   inspectSpec,
   printSnapshotTemplate,
+  refreshArtifacts,
   renderContext,
   runTrial,
   verifySpec,
 } from "./commands/spec.js";
 import { fileExists } from "./lib/fs.js";
+import { loadProjectConfig } from "./lib/project-config.js";
 import { resolveInputFile } from "./lib/spec-paths.js";
 import type { CliOptions } from "./types.js";
 
@@ -98,6 +100,22 @@ program
   });
 
 program
+  .command("refresh")
+  .argument("[file]")
+  .option("--out <directory>")
+  .description(
+    "Refresh agent-facing Specra artifacts in a hidden workspace folder",
+  )
+  .action(async (inputFile: string | undefined, ...args: unknown[]) => {
+    const command = getCommandFromActionArgs(args);
+    const options = command.opts<CliOptions>();
+    process.exitCode = await refreshArtifacts(
+      await resolveRequiredInputFile("refresh", inputFile),
+      options,
+    );
+  });
+
+program
   .command("trial")
   .argument("[file]")
   .option("--out <directory>")
@@ -173,14 +191,18 @@ async function resolveRequiredInputFile(
   command: string,
   explicitInput: string | undefined,
 ): Promise<string> {
-  const inputFile = resolveInputFile(command, explicitInput);
+  const inputFile = await resolveInputFile(command, explicitInput);
   if (!inputFile) {
     throw new Error(`Command "${command}" requires a spec file.`);
   }
 
   if (!explicitInput && !(await fileExists(inputFile))) {
+    const config = await loadProjectConfig();
+    const configHint = config.sourcePath
+      ? ` Check ${defaultProjectConfigFiles.join(" or ")} if you recently moved your contract root.`
+      : "";
     throw new Error(
-      `No spec input was provided and "${defaultSpecDir}/" was not found. Run "specra init" first or pass a .scl.md file, legacy .scl file, or folder explicitly.`,
+      `No spec input was provided and "${config.contractRoot || defaultSpecDir}/" was not found. Run "specra init" first or pass a .scl.md file, legacy .scl file, or folder explicitly.${configHint}`,
     );
   }
 

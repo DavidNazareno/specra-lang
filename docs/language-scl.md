@@ -18,11 +18,11 @@ goal: Describe the core workflow
 Allowed top-level statements:
 
 - `import "./relative/path.scl.md"`
-- `service Name`
+- `service Name` or `service: Name`
 - `goal: text`
-- `entity Name ... end`
-- `operation name(InputA, InputB) -> Output`
-- `expectation name ... end`
+- `entity Name ... end` or `entity Name: ... end`
+- `operation name(InputA, InputB) -> Output` or `operation name: ... end`
+- `expectation name ... end` or `expectation name: ... end`
 - `constraint key: value`
 - `target key: value`
 

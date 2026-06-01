@@ -240,13 +240,13 @@ ${scopeLine}
 
 Required workflow:
 1. Read the relevant \`.scl.md\` contract files under \`specra/\`.
-   If you need a quick reference, read \`specra/SYNTAX.md\`.
+   If you need a quick reference, run \`specra guide\`.
 2. Run \`specra check\` after spec changes.
-3. Run \`specra trial --out specra/generated\` to refresh agent context.
-4. Use \`specra/generated/AI-BRIEF.md\` and \`ai-context.json\` when they exist.
+3. Run \`specra refresh\` to refresh agent context.
+4. Use \`.specra/generated/AI-BRIEF.md\` and \`ai-context.json\` when they exist.
 5. Execute tests or reproduction steps yourself before claiming success.
-6. Write observed behavior into \`specra/generated/observed-results.json\`.
-7. Run \`specra verify --results specra/generated/observed-results.json\`.
+6. Write observed behavior into \`.specra/generated/observed-results.json\`.
+7. Run \`specra verify\` or \`specra verify --results .specra/generated/observed-results.json\`.
 
 Operating rules:
 - Treat the Specra contract as the source of truth over conflicting implementation details.

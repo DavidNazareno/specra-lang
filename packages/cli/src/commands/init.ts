@@ -53,6 +53,7 @@ export async function initializeSpecraProject(
     `- First feature contract: ${path.join("specra", "features", "work-items.scl.md")}`,
   );
   console.log(`- Project guide: ${path.join("specra", "README.md")}`);
+  console.log(`- Hidden agent artifacts live under ${path.join(".specra")}`);
 
   if (detectedAgents.length > 0) {
     await installAgentInstructions(targetDir, {
@@ -66,7 +67,7 @@ export async function initializeSpecraProject(
     );
   }
 
-  console.log(`- Next step: pnpm specra trial --out specra/generated`);
+  console.log(`- Next step: pnpm specra refresh`);
 }
 
 async function detectInitProjectMetadata(

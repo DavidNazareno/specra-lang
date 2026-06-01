@@ -170,7 +170,7 @@ async function loadParseableSource(filePath: string): Promise<string> {
   const blocks = extractSpecraBlocks(source);
   if (blocks.length === 0) {
     throw new Error(
-      `Markdown spec "${toDisplayPath(filePath)}" does not contain any \`\`\`specra fenced blocks.`,
+      `Markdown spec "${toDisplayPath(filePath)}" does not contain any usable \`\`\`specra fenced blocks. Add a fenced block such as \`\`\`specra ... \`\`\` and keep it properly closed.`,
     );
   }
 
@@ -203,13 +203,36 @@ function isImportLine(line: string): boolean {
 
 function extractSpecraBlocks(source: string): string[] {
   const blocks: string[] = [];
-  const pattern = /^```specra\s*\n([\s\S]*?)\n```$/gmu;
+  const lines = source.split(/\r?\n/u);
+  let currentBlock: string[] | null = null;
+  let currentStartLine = 0;
 
-  for (const match of source.matchAll(pattern)) {
-    const block = match[1]?.trim();
-    if (block) {
-      blocks.push(block);
+  for (const [index, line] of lines.entries()) {
+    if (currentBlock === null) {
+      if (/^```specra\s*$/u.test(line)) {
+        currentBlock = [];
+        currentStartLine = index + 1;
+      }
+      continue;
     }
+
+    if (/^```\s*$/u.test(line)) {
+      const block = currentBlock.join("\n").trim();
+      if (block.length > 0) {
+        blocks.push(block);
+      }
+      currentBlock = null;
+      currentStartLine = 0;
+      continue;
+    }
+
+    currentBlock.push(line);
+  }
+
+  if (currentBlock !== null) {
+    throw new Error(
+      `Found an unclosed \`\`\`specra block starting at line ${currentStartLine}. Close it with a matching \`\`\` line.`,
+    );
   }
 
   return blocks;

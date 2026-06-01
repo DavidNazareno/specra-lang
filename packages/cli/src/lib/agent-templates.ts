@@ -16,16 +16,16 @@ When this repository contains \`specra/\`, treat the \`.scl.md\` files in that f
 ## Required workflow
 
 1. Read the relevant \`.scl.md\` files in \`specra/\` before implementing behavior.
-   If you need a quick reference, read \`specra/SYNTAX.md\`.
+   If you need a quick reference, run \`specra guide\`.
 2. Run \`specra check\` after changes to the spec.
-3. Run \`specra trial --out specra/generated\` to refresh:
-   - \`specra/generated/ai-context.json\`
-   - \`specra/generated/AI-BRIEF.md\`
-   - \`specra/generated/verification-plan.json\`
+3. Run \`specra refresh\` to refresh:
+   - \`.specra/generated/ai-context.json\`
+   - \`.specra/generated/AI-BRIEF.md\`
+   - \`.specra/generated/verification-plan.json\`
 4. Use those generated files as implementation guidance.
 5. When validating behavior, execute the app tests or reproduction steps yourself.
-6. Convert the observed behavior into \`specra/generated/observed-results.json\`.
-7. Run \`specra verify --results specra/generated/observed-results.json\`.
+6. Convert the observed behavior into \`.specra/generated/observed-results.json\`.
+7. Run \`specra verify\` or \`specra verify --results .specra/generated/observed-results.json\`.
 
 ## Operating rules
 

@@ -21,14 +21,16 @@ This document describes the parts of Specra that are considered stable enough to
 - `specra init [project-dir]`
 - `specra install [--target codex,claude,opencode|all] [--location local|global]`
 - `specra uninstall [--target codex,claude,opencode|all] [--location local|global]`
+- `specra guide`
 - `specra inspect <file.scl.md|file.scl|folder>`
 - `specra check <file.scl.md|file.scl|folder>`
 - `specra context <file.scl.md|file.scl|folder>`
-- `specra trial <file.scl.md|file.scl|folder> --out <folder> [--impl <snapshot.json>] [--results <observed-results.json>]`
+- `specra refresh <file.scl.md|file.scl|folder> [--out <folder>]`
+- `specra trial <file.scl.md|file.scl|folder> [--out <folder>] [--impl <snapshot.json>] [--results <observed-results.json>]`
 - `specra snapshot-template <file.scl.md|file.scl|folder>`
 - `specra extract-typescript <file.scl.md|file.scl|folder> --impl <snapshot.json>`
-- `specra generate <file.scl.md|file.scl|folder> --out <folder>`
-- `specra verify <file.scl.md|file.scl|folder> --results <observed-results.json>`
+- `specra generate <file.scl.md|file.scl|folder> [--out <folder>]`
+- `specra verify <file.scl.md|file.scl|folder> [--results <observed-results.json>]`
 
 ## Stable generated artifacts
 
@@ -45,9 +47,10 @@ This document describes the parts of Specra that are considered stable enough to
 ## Stable repository convention
 
 - `specra/` is the default project contract root when no file is passed to the CLI
+- `specra.config.jsonc` or `specra.config.json` can override the contract root and generated output directory
 - `.scl.md` files can hold human Markdown plus fenced `specra` blocks
 - multiple `.scl.md` or legacy `.scl` files can be composed with `import "./relative-file.scl.md"` from root entrypoints in `specra/`
-- `specra/generated/` is the recommended local output folder for generated trial artifacts
+- `.specra/generated/` is the recommended hidden local output folder for generated agent-facing artifacts
 - `specra/README.md` documents the app-local workflow after `specra init`
 - local agent guidance can be installed into `AGENTS.md` and `CLAUDE.md`
 

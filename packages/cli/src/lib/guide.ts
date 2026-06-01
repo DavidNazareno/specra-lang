@@ -14,15 +14,15 @@ Specra is a contract-and-verification layer for AI-assisted development.
 
 1. Write or update the contract in \`specra/\`
 2. Run \`specra check\`
-3. Run \`specra trial --out specra/generated\`
+3. Run \`specra refresh\`
 4. Read:
-   - \`specra/generated/AI-BRIEF.md\`
-   - \`specra/generated/ai-context.json\`
-   - \`specra/generated/verification-plan.json\`
+   - \`.specra/generated/AI-BRIEF.md\`
+   - \`.specra/generated/ai-context.json\`
+   - \`.specra/generated/verification-plan.json\`
 5. Implement behavior in code
 6. Execute tests or reproduction steps
-7. Write observed behavior into \`specra/generated/observed-results.json\`
-8. Run \`specra verify --results specra/generated/observed-results.json\`
+7. Write observed behavior into \`.specra/generated/observed-results.json\`
+8. Run \`specra verify\` or \`specra verify --results .specra/generated/observed-results.json\`
 
 ## Minimal syntax
 

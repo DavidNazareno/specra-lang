@@ -23,6 +23,7 @@ import {
   renderTrialGuide,
 } from "../lib/generate-files.js";
 import { printIssues } from "../lib/args.js";
+import { loadProjectConfig } from "../lib/project-config.js";
 import { formatSpecLocation, loadDocument } from "../lib/spec-loader.js";
 import { resolveOutputDir } from "../lib/spec-paths.js";
 
@@ -81,7 +82,7 @@ export async function generateArtifacts(
     return 1;
   }
 
-  const outDir = resolveOutputDir("generate", inputFile, options.out);
+  const outDir = await resolveOutputDir("generate", inputFile, options.out);
   const files = createGenericFiles(document);
   for (const file of files) {
     const outputPath = path.join(outDir, file.path);
@@ -90,6 +91,33 @@ export async function generateArtifacts(
   }
 
   console.log(`Generated ${files.length} files in ${outDir}`);
+  return 0;
+}
+
+export async function refreshArtifacts(
+  inputFile: string,
+  options: CliOptions,
+): Promise<number> {
+  const document = await loadDocument(inputFile);
+  const issues = validateDocument(document);
+
+  if (issues.length > 0) {
+    printIssues(issues);
+    return 1;
+  }
+
+  const outDir = await resolveOutputDir("refresh", inputFile, options.out);
+  const files = createGenericFiles(document);
+  for (const file of files) {
+    const outputPath = path.join(outDir, file.path);
+    await ensureDir(path.dirname(outputPath));
+    await writeTextFile(outputPath, file.content);
+  }
+
+  console.log(`Refreshed ${files.length} Specra files in ${outDir}`);
+  console.log(
+    "- Use AI-BRIEF.md, ai-context.json, and verification-plan.json for the agent loop.",
+  );
   return 0;
 }
 
@@ -105,7 +133,7 @@ export async function runTrial(
     return 1;
   }
 
-  const outDir = resolveOutputDir("trial", inputFile, options.out);
+  const outDir = await resolveOutputDir("trial", inputFile, options.out);
   const model = normalizeDocument(document);
   const snapshotTemplate = createSnapshotTemplate(model);
   const trialFiles = [
@@ -256,8 +284,27 @@ export async function verifySpec(
   }
 
   if (!options.results) {
-    console.error('Missing "--results <file.json>" for verify.');
-    return 1;
+    const config = await loadProjectConfig();
+    const defaultResultsPath = path.join(
+      config.generatedDir,
+      "observed-results.json",
+    );
+    try {
+      const rawResults = await readTextFile(defaultResultsPath);
+      const observedResults = JSON.parse(rawResults) as Parameters<
+        typeof verifyObservedResults
+      >[1];
+      const model = normalizeDocument(document);
+      const report = verifyObservedResults(model, observedResults);
+
+      console.log(renderVerificationReport(report));
+      return report.summary.failed > 0 || report.summary.missing > 0 ? 1 : 0;
+    } catch {
+      console.error(
+        `Missing "--results <file.json>" for verify, and no default "${defaultResultsPath}" was found.`,
+      );
+      return 1;
+    }
   }
 
   const rawResults = await readTextFile(options.results);

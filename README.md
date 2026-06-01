@@ -50,11 +50,14 @@ packages/
 
 ## Example
 
-```txt
-service BookingApp
+````md
+# Booking App
+
+```specra
+service: BookingApp
 goal: Manage restaurant reservations
 
-entity Reservation
+entity Reservation:
 id: UUID
 customerName: string
 date: string
@@ -62,9 +65,12 @@ partySize: number
 status: string
 end
 
-operation createReservation(Reservation) -> Reservation
+operation createReservation:
+input: Reservation
+output: Reservation
+end
 
-expectation createReservation_success
+expectation createReservation_success:
 operation: createReservation
 auth: valid
 input customerName: "Ana"
@@ -78,16 +84,17 @@ constraint auth_required: true
 target runtime: generic
 target database: postgres
 ```
+````
 
 ## `.scl.md` syntax rules
 
 Top-level statements allowed:
 
-- `service Name`
+- `service Name` or `service: Name`
 - `goal: text`
-- `entity Name ... end`
-- `operation name(InputA, InputB) -> Output`
-- `expectation name ... end`
+- `entity Name ... end` or `entity Name: ... end`
+- `operation name(InputA, InputB) -> Output` or `operation name: ... end`
+- `expectation name ... end` or `expectation name: ... end`
 - `constraint key: value`
 - `target key: value`
 
@@ -118,10 +125,10 @@ pnpm specra init
 pnpm specra install --target codex,claude,opencode --location local
 pnpm specra check
 pnpm specra context
-pnpm specra trial --out specra/generated
+pnpm specra refresh
 pnpm specra snapshot-template
 pnpm specra extract-typescript --impl tests/fixtures/typescript-implementation-snapshot.json
-pnpm specra generate --out specra/generated
+pnpm specra trial
 ```
 
 The generated verification artifacts now include:
@@ -160,7 +167,7 @@ Start with:
 pnpm specra init
 ```
 
-That creates `specra/` as the contract root, with a shared `service.scl.md`, a first feature slice under `specra/features/`, and `specra/README.md` for the local workflow. The root file already imports the feature file, so the default shape is ready for multi-file contracts. During `specra init`, Specra also installs local agent guidance automatically for supported agents it detects on your machine. After that, the CLI defaults to `specra/`, so `pnpm specra check` and `pnpm specra trial --out specra/generated` work without repeating the input path.
+That creates `specra/` as the contract root, with a shared `service.scl.md`, a first feature slice under `specra/features/`, and `specra/README.md` for the local workflow. The root file already imports the feature file, so the default shape is ready for multi-file contracts. During `specra init`, Specra also installs local agent guidance automatically for supported agents it detects on your machine. After that, the CLI defaults to `specra/`, so `pnpm specra check`, `pnpm specra refresh`, and `pnpm specra verify` work without repeating the input path, while generated agent-facing artifacts stay hidden under `.specra/`.
 
 If you prefer user-wide instructions instead of per-project files:
 
@@ -168,7 +175,16 @@ If you prefer user-wide instructions instead of per-project files:
 pnpm specra install --target codex,claude,opencode --location global
 ```
 
-Today Specra verifies observed results against the contract. Automatic extraction from live Next.js tests is still a future step, so the current bridge into verification is the generated snapshot or observed-results templates.
+Today Specra verifies observed results against the contract. Automatic extraction from live Next.js tests is still a future step, so the current bridge into verification is the hidden `.specra/generated/` workspace or an explicit results file.
+
+If you need to move the contract root or generated workspace, add a project config file such as `specra.config.jsonc`:
+
+```jsonc
+{
+  "contractRoot": "docs/contracts",
+  "generatedDir": ".cache/specra"
+}
+```
 
 ## Current package roles
 

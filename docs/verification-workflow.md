@@ -26,10 +26,10 @@ These artifacts are used by coding agents or downstream tooling.
 When a project uses `specra install`, the generated agent guidance should direct the coding agent to:
 
 1. read the relevant `.scl.md` files under `specra/`
-2. refresh `specra/generated/` with `specra trial`
+2. refresh `.specra/generated/` with `specra refresh`
 3. run the app's tests or reproduction steps
-4. write `specra/generated/observed-results.json`
-5. call `specra verify --results specra/generated/observed-results.json`
+4. write `.specra/generated/observed-results.json`
+5. call `specra verify` or `specra verify --results .specra/generated/observed-results.json`
 
 ## 3. Observed implementation results
 

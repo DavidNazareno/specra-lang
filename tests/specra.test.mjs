@@ -219,6 +219,62 @@ test("cli guide prints syntax and workflow help", async () => {
   assert.match(stdout, /service: ExampleApp/);
 });
 
+test("cli respects project config for contract root and generated output", async () => {
+  const tempDir = await mkdtemp(path.join(os.tmpdir(), "specra-config-"));
+
+  await mkdir(path.join(tempDir, "docs", "contracts"), { recursive: true });
+  await writeFile(
+    path.join(tempDir, "specra.config.jsonc"),
+    `{
+  // keep the contract outside the default folder
+  "contractRoot": "docs/contracts",
+  "generatedDir": ".cache/specra"
+}
+`,
+  );
+  await writeFile(
+    path.join(tempDir, "docs", "contracts", "service.scl.md"),
+    `# Config App
+
+\`\`\`specra
+service: ConfigApp
+goal: Verify config-aware defaults
+
+entity Ping:
+value: string
+end
+
+operation ping:
+input: Ping
+output: Ping
+end
+
+expectation ping_success:
+operation: ping
+auth: optional
+input value: "pong"
+expect outcome: success
+expect output.value: "pong"
+end
+
+target runtime: generic
+target database: unknown
+\`\`\`
+`,
+  );
+
+  const { stdout: checkStdout } = await runCli(["check"], tempDir);
+  const { stdout: refreshStdout } = await runCli(["refresh"], tempDir);
+  const plan = await readFile(
+    path.join(tempDir, ".cache", "specra", "verification-plan.json"),
+    "utf8",
+  );
+
+  assert.match(checkStdout, /Spec OK: ConfigApp from docs\/contracts/);
+  assert.match(refreshStdout, /Refreshed 5 Specra files in \.cache\/specra/);
+  assert.match(plan, /ping_success/);
+});
+
 test("cli init scaffolds a specra folder for an app repository", async () => {
   const tempDir = await mkdtemp(path.join(os.tmpdir(), "specra-init-"));
   const fakeHome = path.join(tempDir, "home");
@@ -249,8 +305,8 @@ test("cli init scaffolds a specra folder for an app repository", async () => {
     "utf8",
   );
   const guide = await readFile(path.join(tempDir, "specra/README.md"), "utf8");
-  const syntaxGuide = await readFile(
-    path.join(tempDir, "specra/SYNTAX.md"),
+  const hiddenIgnore = await readFile(
+    path.join(tempDir, ".specra/.gitignore"),
     "utf8",
   );
 
@@ -260,7 +316,7 @@ test("cli init scaffolds a specra folder for an app repository", async () => {
   assert.match(serviceSpec, /target runtime: nextjs/);
   assert.match(featureSpec, /expectation createWorkItem_success/);
   assert.match(guide, /Suggested loop/);
-  assert.match(syntaxGuide, /# Specra Guide/);
+  assert.match(hiddenIgnore, /\*/);
   assert.match(stdout, /No supported agents were detected/);
 });
 
@@ -315,15 +371,18 @@ test("cli commands use specra\\/ by convention after init", async () => {
   });
 
   const { stdout: checkStdout } = await runCli(["check"], tempDir);
-  const { stdout: trialStdout } = await runCli(["trial"], tempDir);
-  const report = await readFile(
-    path.join(tempDir, "specra/generated/verification-report.txt"),
+  const { stdout: refreshStdout } = await runCli(["refresh"], tempDir);
+  const plan = await readFile(
+    path.join(tempDir, ".specra/generated/verification-plan.json"),
     "utf8",
   );
 
   assert.match(checkStdout, /Spec OK: AcmeWeb from specra\//);
-  assert.match(trialStdout, /Prepared trial in specra\/generated/);
-  assert.match(report, /Passed: 2/);
+  assert.match(
+    refreshStdout,
+    /Refreshed 5 Specra files in \.specra\/generated/,
+  );
+  assert.match(plan, /createWorkItem_success/);
 });
 
 test("cli can merge split specs from specra\\/ and validate cross-file references", async () => {
@@ -459,6 +518,26 @@ end
   );
 });
 
+test("cli reports unclosed specra markdown blocks clearly", async () => {
+  const tempDir = await mkdtemp(path.join(os.tmpdir(), "specra-unclosed-"));
+
+  await mkdir(path.join(tempDir, "specra"), { recursive: true });
+  await writeFile(
+    path.join(tempDir, "specra", "service.scl.md"),
+    `# Broken
+
+\`\`\`specra
+service: BrokenApp
+goal: Detect malformed fenced blocks
+`,
+  );
+
+  await assert.rejects(
+    async () => runCli(["check"], tempDir),
+    /unclosed ```specra block starting at line 3/i,
+  );
+});
+
 test("cli install writes managed agent instructions locally", async () => {
   const tempDir = await mkdtemp(path.join(os.tmpdir(), "specra-install-"));
 
@@ -472,7 +551,7 @@ test("cli install writes managed agent instructions locally", async () => {
   assert.match(agents, /Specra for Codex/);
   assert.match(
     agents,
-    /specra verify --results specra\/generated\/observed-results.json/,
+    /specra verify --results \.specra\/generated\/observed-results\.json/,
   );
 });
 

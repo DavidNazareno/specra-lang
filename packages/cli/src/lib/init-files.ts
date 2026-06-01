@@ -1,8 +1,6 @@
 import path from "node:path";
 
 import type { GeneratedFile, InitProjectMetadata } from "../types.js";
-import { renderSpecraGuide } from "./guide.js";
-
 export function createInitFiles(
   metadata: InitProjectMetadata,
 ): GeneratedFile[] {
@@ -58,38 +56,34 @@ end
 
   const guide = `# Specra
 
-This folder stores the contract that your app and your AI workflow should follow.
-You can keep one \`.scl.md\` file or split the contract by feature under \`specra/\`.
+This folder stores the product contract for your app and your AI workflow.
+Keep the source contract here and let Specra write generated artifacts to \`.specra/\`.
 
 ## Suggested loop
 
 1. Edit the \`.scl.md\` files in this folder until they capture the workflow you want.
 2. Run \`pnpm specra check\` to validate the contract.
-3. Run \`pnpm specra trial --out specra/generated\` to produce the AI brief and verification templates.
-4. Ask your coding agent to read the relevant specs in \`specra/\`, \`specra/generated/ai-context.json\`, and \`specra/generated/AI-BRIEF.md\`.
-   Also point it to \`specra/SYNTAX.md\` if it needs a local quick reference.
+3. Run \`pnpm specra refresh\` to update the hidden agent-facing artifacts in \`.specra/generated/\`.
+4. Ask your coding agent to read the relevant specs in \`specra/\`.
+   If it needs a syntax reference, tell it to run \`specra guide\`.
 5. Implement the app behavior and collect observed results.
-6. Re-run \`pnpm specra trial --out specra/generated --impl ...\` or \`--results ...\`.
+6. Re-run \`pnpm specra trial\` if you need verification templates or \`pnpm specra verify --results ...\` for explicit verification.
 
 ## Current reality
 
 - Specra already validates \`.scl.md\`, generates agent-facing context, and verifies observed results.
 - Extraction from real Next.js tests is not automatic yet. For now, bridge into Specra through the snapshot or observed-results files.
-- The goal of this folder is to keep the contract next to the app source, inside the same repository.
+- The goal of this folder is to keep the contract next to the app source, inside the same repository, with minimal visible footprint.
 `;
 
   return [
     {
-      path: path.join("specra", ".gitignore"),
-      content: "generated/\n",
+      path: path.join(".specra", ".gitignore"),
+      content: "*\n!.gitignore\n",
     },
     {
       path: path.join("specra", "README.md"),
       content: guide,
-    },
-    {
-      path: path.join("specra", "SYNTAX.md"),
-      content: renderSpecraGuide(),
     },
     {
       path: path.join("specra", "service.scl.md"),

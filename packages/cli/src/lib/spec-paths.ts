@@ -1,11 +1,10 @@
-import path from "node:path";
+import { defaultGeneratedDir } from "../config.js";
+import { loadProjectConfig, usesContractRoot } from "./project-config.js";
 
-import { defaultSpecDir } from "../config.js";
-
-export function resolveInputFile(
+export async function resolveInputFile(
   command: string,
   explicitInput: string | undefined,
-): string | null {
+): Promise<string | null> {
   if (explicitInput) {
     return explicitInput;
   }
@@ -14,28 +13,27 @@ export function resolveInputFile(
     return null;
   }
 
-  return defaultSpecDir;
+  const config = await loadProjectConfig();
+  return config.contractRoot;
 }
 
-export function resolveOutputDir(
-  command: "generate" | "trial" | string,
+export async function resolveOutputDir(
+  command: "generate" | "refresh" | "trial" | string,
   inputFile: string,
   explicitOut: string | undefined,
-): string {
+): Promise<string> {
   if (explicitOut) {
     return explicitOut;
   }
 
-  if (
-    inputFile === defaultSpecDir ||
-    inputFile === path.join(defaultSpecDir, "app.scl") ||
-    inputFile === path.join(defaultSpecDir, "service.scl.md") ||
-    inputFile.startsWith(`${defaultSpecDir}${path.sep}`)
-  ) {
-    return path.join("specra", "generated");
+  const config = await loadProjectConfig();
+  if (usesContractRoot(inputFile, config.contractRoot)) {
+    return config.generatedDir;
   }
 
-  return command === "trial"
-    ? "generated/specra-trial"
-    : "generated/specra-app";
+  if (command === "trial" || command === "refresh" || command === "generate") {
+    return defaultGeneratedDir;
+  }
+
+  return "generated/specra-app";
 }
