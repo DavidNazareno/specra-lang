@@ -158,7 +158,7 @@ test('cli guide prints syntax and workflow help', async () => {
   assert.match(stdout, /# Specra Guide/)
   assert.match(stdout, /Recommended workflow/)
   assert.match(stdout, /service: ExampleApp/)
-  assert.match(stdout, /specra proof/)
+  assert.match(stdout, /specra-lang proof/)
 })
 
 test('cli proof scaffolds a compact proof template', async () => {
@@ -610,8 +610,8 @@ test('cli install writes managed agent instructions locally', async () => {
   assert.match(stdout, /Installed Specra agent guidance/)
   assert.match(agents, /# Existing agent notes/)
   assert.match(agents, /Specra for Codex/)
-  assert.match(agents, /specra proof/)
-  assert.match(agents, /specra verify --results \.specra\/verify\/proof\.json/)
+  assert.match(agents, /specra-lang proof/)
+  assert.match(agents, /specra-lang verify --results \.specra\/verify\/proof\.json/)
 })
 
 test('cli uninstall removes only the managed local block', async () => {
