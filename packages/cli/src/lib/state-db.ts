@@ -12,7 +12,6 @@ export interface StateArtifacts {
   plan: string;
   proof?: string;
   report?: string;
-  snap?: string;
 }
 
 export interface StateSnapshot {

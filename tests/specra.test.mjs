@@ -12,11 +12,7 @@ const cliEntry = path.join(process.cwd(), "packages/cli/dist/index.js");
 
 const core = await import("../packages/core/dist/index.js");
 const ir = await import("../packages/ir/dist/index.js");
-const aiContext = await import("../packages/ai-context/dist/index.js");
 const verifier = await import("../packages/verifier/dist/index.js");
-const verifierTypeScript = await import(
-  "../packages/verifier-typescript/dist/index.js"
-);
 
 async function readFixture(name) {
   return readFile(new URL(`./fixtures/${name}`, import.meta.url), "utf8");
@@ -115,17 +111,14 @@ target database: unknown
   assert.deepEqual(issues, ["At least one entity is required."]);
 });
 
-test("normalized model produces verification plan and AI context", async () => {
+test("normalized model produces a verification plan", async () => {
   const source = await readFixture("booking-valid.scl");
   const document = core.parseDocument(source);
   const model = ir.normalizeDocument(document);
   const plan = ir.createVerificationPlan(model);
-  const context = aiContext.createAiContext(model);
-  const brief = aiContext.renderAiImplementationBrief(model);
 
   assert.equal(plan.length, 2);
-  assert.equal(context.operations[0].name, "createReservation");
-  assert.match(brief, /Rules for the implementing agent/);
+  assert.equal(plan[0].operation, "createReservation");
 });
 
 test("verifier compares observed results against expectations", async () => {
@@ -148,59 +141,6 @@ test("verifier compares observed results against expectations", async () => {
 
   assert.equal(report.summary.failed, 0);
   assert.equal(report.summary.passed, 2);
-});
-
-test("typescript verifier extracts observed results from implementation snapshot", async () => {
-  const source = await readFixture("booking-valid.scl");
-  const snapshotRaw = await readFixture(
-    "typescript-implementation-snapshot.json",
-  );
-  const model = ir.normalizeDocument(core.parseDocument(source));
-  const snapshot = JSON.parse(snapshotRaw);
-
-  const extraction = verifierTypeScript.extractObservedResultsFromSnapshot(
-    model,
-    snapshot,
-  );
-
-  assert.equal(extraction.observedResults.length, 2);
-  assert.deepEqual(extraction.warnings, []);
-});
-
-test("cli trial command scaffolds a runnable end-to-end folder", async () => {
-  const tempDir = await mkdtemp(path.join(os.tmpdir(), "specra-trial-"));
-  const outDir = path.join(tempDir, "trial");
-
-  const { stdout } = await runCli(
-    [
-      "trial",
-      "examples/booking-app/app.scl",
-      "--out",
-      outDir,
-      "--impl",
-      "tests/fixtures/typescript-implementation-snapshot.json",
-    ],
-    process.cwd(),
-  );
-
-  assert.match(stdout, /Prepared trial in/);
-
-  const report = await readFile(
-    path.join(outDir, "verify", "report.txt"),
-    "utf8",
-  );
-  const extractedResults = JSON.parse(
-    await readFile(path.join(outDir, "verify", "proof.json"), "utf8"),
-  );
-  const plan = await readFile(path.join(outDir, "plan.json"), "utf8");
-  const ctx = await readFile(path.join(outDir, "ctx.json"), "utf8");
-  const db = await readFile(path.join(outDir, "specra.db"));
-
-  assert.match(report, /Passed: 2/);
-  assert.equal(extractedResults.length, 2);
-  assert.match(plan, /createReservation_success/);
-  assert.match(ctx, /BookingApp/);
-  assert.ok(db.byteLength > 0);
 });
 
 test("cli check supports the imports example from the repository", async () => {

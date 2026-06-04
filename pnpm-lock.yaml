@@ -30,12 +30,6 @@ importers:
         specifier: ^1.6.4
         version: 1.6.4(@algolia/client-search@5.53.0)(@types/node@24.12.4)(axios@1.16.0)(postcss@8.5.15)(search-insights@2.17.3)(typescript@5.9.3)
 
-  packages/ai-context:
-    dependencies:
-      '@specra/ir':
-        specifier: workspace:*
-        version: link:../ir
-
   packages/ast: {}
 
   packages/cli:
@@ -43,9 +37,6 @@ importers:
       '@clack/prompts':
         specifier: ^1.4.0
         version: 1.4.0
-      '@specra/ai-context':
-        specifier: workspace:*
-        version: link:../ai-context
       '@specra/ast':
         specifier: workspace:*
         version: link:../ast
@@ -58,9 +49,6 @@ importers:
       '@specra/verifier':
         specifier: workspace:*
         version: link:../verifier
-      '@specra/verifier-typescript':
-        specifier: workspace:*
-        version: link:../verifier-typescript
       commander:
         specifier: ^14.0.3
         version: 14.0.3
@@ -101,18 +89,6 @@ importers:
       '@specra/ir':
         specifier: workspace:*
         version: link:../ir
-
-  packages/verifier-typescript:
-    dependencies:
-      '@specra/ast':
-        specifier: workspace:*
-        version: link:../ast
-      '@specra/ir':
-        specifier: workspace:*
-        version: link:../ir
-      '@specra/verifier':
-        specifier: workspace:*
-        version: link:../verifier
 
 packages:
 

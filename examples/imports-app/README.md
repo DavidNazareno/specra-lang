@@ -29,8 +29,9 @@ Using the folder root:
 
 ```bash
 pnpm specra check examples/imports-app
-pnpm specra refresh examples/imports-app
-pnpm specra trial examples/imports-app
+pnpm specra refresh examples/imports-app --out examples/imports-app/.specra
+pnpm specra proof examples/imports-app --out examples/imports-app/.specra
+pnpm specra verify examples/imports-app --results examples/imports-app/.specra/verify/proof.json
 ```
 
-Both forms resolve the imported feature file and validate the combined contract. `refresh` writes the agent-facing files into `.specra/generated/` by default, and `trial` adds verification templates on top of that hidden workspace.
+Both forms resolve the imported feature file and validate the combined contract. In this example the output directory is passed explicitly so the generated state stays next to the example itself.

@@ -1,139 +1,75 @@
 Summary
 
-Specra is an AI-oriented specification language. The current direction of the project is not to compile full apps by itself, but to act as a strict contract between human intent, AI-assisted implementation, and verification. The language extension is `.scl`, the project is at `0.1.0`, and the repo is already prepared to be published as open source.
+Specra is a contract-first layer for AI-assisted software delivery. It is not trying to compile full applications from specs. The current product direction is simpler: keep a small contract next to the app, generate compact agent-facing state, let the agent run tests and collect evidence, and verify that evidence against expectations.
 
-What is already done
+Current product shape
 
-The repo uses pnpm + Nx + TypeScript + Biome. It includes a `.scl` parser and validator, an AST, a normalized IR, AI context generation, verifiable expectations, a base verifier, and a snapshot-based TypeScript extractor.
+- Source contract lives in `specra/*.scl.md`
+- Generated hidden state lives in `.specra/`
+- The user-facing npm package is `specra`
+- The intended workflow is:
+  1. `specra init`
+  2. `specra check`
+  3. `specra refresh`
+  4. `specra proof`
+  5. agent runs tests
+  6. agent fills `proof.json`
+  7. `specra verify`
 
-Current packages:
+Current internal packages
 
 - `@specra/ast`: document types
 - `@specra/core`: parser and validator
-- `@specra/ir`: normalized semantic model + verification plan
-- `@specra/ai-context`: agent artifacts + brief
+- `@specra/ir`: normalized semantic model and verification plan
 - `@specra/verifier`: compares observed results against expectations
-- `@specra/verifier-typescript`: converts TypeScript-friendly snapshots into observed results
 - `specra`: user-facing CLI package
 
-Current CLI
+Current CLI surface
 
-- `specra inspect <file.scl>`
-- `specra check <file.scl>`
-- `specra context <file.scl>`
-- `specra snapshot-template <file.scl>`
-- `specra extract-typescript <file.scl> --impl <snapshot.json>`
-- `specra generate <file.scl> --out <folder>`
-- `specra verify <file.scl> --results <observed-results.json>`
+- `specra guide`
+- `specra init [project-dir]`
+- `specra install`
+- `specra uninstall`
+- `specra inspect <file.scl.md|file.scl|folder>`
+- `specra check <file.scl.md|file.scl|folder>`
+- `specra refresh <file.scl.md|file.scl|folder>`
+- `specra proof <file.scl.md|file.scl|folder>`
+- `specra verify <file.scl.md|file.scl|folder> [--results <proof.json>]`
 
-Current `.scl` syntax
+Current generated state
 
-Supported:
-
-- `service`
-- `goal`
-- `entity ... end`
-- `operation`
-- `expectation ... end`
-- `constraint`
-- `target`
-
-Inside `expectation`:
-
-- `operation:`
-- `auth: valid|missing|optional`
-- `input field: value`
-- `expect outcome: success|unauthorized|error`
-- `expect output.field: value`
-
-Working example
-
-There is an example in:
-
-- `examples/booking-app/app.scl`
-
-Fixtures/tests:
-
-- `tests/specra.test.mjs`
-- `tests/fixtures`
-
-Artifacts currently generated
-
-- `specra.json`
-- `SUMMARY.md`
-- `verification-plan.json`
-- `ai-context.json`
-- `AI-BRIEF.md`
+- `.specra/ctx.json`
+- `.specra/plan.json`
+- `.specra/specra.db`
+- `.specra/verify/proof.json`
+- `.specra/verify/report.txt`
 
 Current verification model
 
-The current flow is:
+1. `.scl.md` defines intent and expectations
+2. `specra refresh` derives compact runtime state
+3. `specra proof` scaffolds the evidence file
+4. the coding agent runs tests and writes observed values into `proof.json`
+5. `specra verify` checks that proof against the contract
 
-1. `.scl` defines intent and expectations
-2. Specra generates context and a verification plan
-3. an implementation produces a snapshot or observed results
-4. `specra verify` compares observed results with expectations
+Important constraints
 
-Today the TypeScript extractor does not inspect arbitrary code yet; it uses a structured snapshot as the bridge.
+- Specra does not validate arbitrary code directly
+- Specra verifies observed evidence, not implementation internals
+- The current bridge from tests into verification is the proof file the agent fills
 
-Open source infrastructure already prepared
+Repository status
 
-Already present:
+- TypeScript monorepo with pnpm + Nx + Biome
+- Docs site with VitePress
+- GitHub Actions for CI, docs, and versioning
+- Single public install surface: `specra`
 
-- `README`
-- docs for stable surface, language, verification, publishing, and versioning
-- `CHANGELOG`
-- `CODE_OF_CONDUCT`
-- `CONTRIBUTING`
-- GitHub issue/PR templates
-- Changesets
-- GitHub Actions for CI and Versioning
+Short product framing
 
-Important files:
+Specra should feel like the lightest useful way to do contract-driven AI coding:
 
-- `README.md`
-- `docs/current-stable-surface.md`
-- `docs/language-scl.md`
-- `docs/verification-workflow.md`
-- `docs/versioning-and-releases.md`
-- `docs/publishing-checklist.md`
-
-What is still missing
-
-The main missing pieces before a more realistic AI workflow:
-
-- a comfortable façade such as `@specra/sdk`
-- a less manual local end-to-end loop
-- a real TypeScript extractor from code or tests, not only snapshots
-- more realistic examples
-- possibly an orchestrating command for local trial runs
-
-Recommended next step
-
-Create:
-
-- `@specra/sdk`
-- an `examples/local-trial` example
-- a flow where the AI reads `app.scl`, gets `ai-context`, produces an implementation or snapshot, and then Specra verifies it automatically
-
-Technical status
-
-The base compiles and validates. The commands already used successfully are:
-
-- `pnpm build`
-- `pnpm check`
-- `pnpm lint`
-- `pnpm test`
-- `pnpm specra context ...`
-- `pnpm specra generate ...`
-- `pnpm specra verify ...`
-
-Core idea
-
-The current philosophy of the project is:
-
-Specra does not let the AI do whatever it wants; it gives the model a small, validatable, and verifiable structure to implement within clear boundaries.
-
-If you want, in the next chat you can ask directly:
-
-`create @specra/sdk and a local-trial flow so we can start testing Specra with AI for real`
+- write a small contract
+- give the agent compact state
+- force the agent to produce evidence
+- verify that evidence

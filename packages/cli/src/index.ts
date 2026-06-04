@@ -10,14 +10,9 @@ import {
 } from "./commands/install.js";
 import {
   checkSpec,
-  extractTypeScriptResults,
-  generateArtifacts,
   inspectSpec,
-  printSnapshotTemplate,
   prepareProof,
   refreshArtifacts,
-  renderContext,
-  runTrial,
   verifySpec,
 } from "./commands/spec.js";
 import { fileExists } from "./lib/fs.js";
@@ -96,15 +91,6 @@ program
   });
 
 program
-  .command("context")
-  .argument("[file]")
-  .action(async (inputFile: string | undefined) => {
-    process.exitCode = await renderContext(
-      await resolveRequiredInputFile("context", inputFile),
-    );
-  });
-
-program
   .command("refresh")
   .argument("[file]")
   .option("--out <directory>")
@@ -132,56 +118,6 @@ program
     const options = command.opts<CliOptions>();
     process.exitCode = await prepareProof(
       await resolveRequiredInputFile("proof", inputFile),
-      options,
-    );
-  });
-
-program
-  .command("trial")
-  .argument("[file]")
-  .option("--out <directory>")
-  .option("--impl <snapshotPath>")
-  .option("--results <resultsPath>")
-  .action(async (inputFile: string | undefined, ...args: unknown[]) => {
-    const command = getCommandFromActionArgs(args);
-    const options = command.opts<CliOptions>();
-    process.exitCode = await runTrial(
-      await resolveRequiredInputFile("trial", inputFile),
-      options,
-    );
-  });
-
-program
-  .command("snapshot-template")
-  .argument("[file]")
-  .action(async (inputFile: string | undefined) => {
-    process.exitCode = await printSnapshotTemplate(
-      await resolveRequiredInputFile("snapshot-template", inputFile),
-    );
-  });
-
-program
-  .command("extract-typescript")
-  .argument("[file]")
-  .option("--impl <snapshotPath>")
-  .action(async (inputFile: string | undefined, ...args: unknown[]) => {
-    const command = getCommandFromActionArgs(args);
-    const options = command.opts<CliOptions>();
-    process.exitCode = await extractTypeScriptResults(
-      await resolveRequiredInputFile("extract-typescript", inputFile),
-      options,
-    );
-  });
-
-program
-  .command("generate")
-  .argument("[file]")
-  .option("--out <directory>")
-  .action(async (inputFile: string | undefined, ...args: unknown[]) => {
-    const command = getCommandFromActionArgs(args);
-    const options = command.opts<CliOptions>();
-    process.exitCode = await generateArtifacts(
-      await resolveRequiredInputFile("generate", inputFile),
       options,
     );
   });

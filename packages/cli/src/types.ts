@@ -2,7 +2,6 @@ export interface CliOptions {
   database?: string;
   example?: boolean;
   force?: boolean;
-  impl?: string;
   installAgents?: boolean;
   location?: string;
   name?: string;

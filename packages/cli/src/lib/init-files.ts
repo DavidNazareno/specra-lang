@@ -139,12 +139,12 @@ Keep the source contract here and let Specra write generated artifacts to \`.spe
    If it needs a syntax reference, tell it to run \`specra guide\`.
 6. Implement the app behavior and collect observed results from tests.
 7. Replace the \`__fill__\` placeholders in \`proof.json\` with what the tests actually observed.
-8. Re-run \`pnpm specra trial\` if you need snapshot-driven templates or \`pnpm specra verify --results ...\` for explicit verification.
+8. Run \`pnpm specra verify\` or \`pnpm specra verify --results ...\` to compare proof against the contract.
 
 ## Current reality
 
 - Specra already validates \`.scl.md\`, writes compact runtime state, and verifies observed results.
-- Extraction from real Next.js tests is not automatic yet. For now, bridge into Specra through the snapshot or proof files.
+- Extraction from real Next.js tests is not automatic yet. For now, let your coding agent bridge from tests into \`proof.json\`.
 - The goal of this folder is to keep the contract next to the app source, inside the same repository, with minimal visible footprint.
 `;
 

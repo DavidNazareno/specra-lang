@@ -25,7 +25,6 @@ This repository currently includes:
 - a normalized semantic model
 - compact runtime artifacts for agents
 - a basic expectation verifier
-- a first TypeScript-oriented implementation snapshot extractor
 - a CLI
 - a local SQLite state index for compact retrieval
 
@@ -134,10 +133,6 @@ pnpm test
 pnpm changeset
 pnpm specra init --template hello-world
 pnpm specra install --target codex,claude,opencode --location local
-pnpm specra context
-pnpm specra snapshot-template
-pnpm specra extract-typescript --impl tests/fixtures/typescript-implementation-snapshot.json
-pnpm specra trial
 ```
 
 ## Install
@@ -153,10 +148,6 @@ The compact runtime artifacts now include:
 - `.specra/ctx.json`
 - `.specra/plan.json`
 - `.specra/specra.db`
-
-The `trial` flow also scaffolds verification artifacts:
-
-- `.specra/verify/snap.json`
 - `.specra/verify/proof.json`
 - `.specra/verify/report.txt`
 
@@ -205,7 +196,7 @@ If you prefer user-wide instructions instead of per-project files:
 pnpm specra install --target codex,claude,opencode --location global
 ```
 
-Today Specra verifies observed results against the contract. Automatic extraction from live Next.js tests is still a future step, so the current bridge into verification is the hidden `.specra/verify/` workspace or an explicit results file.
+Today Specra verifies observed results against the contract. Automatic extraction from live Next.js tests is still a future step, so the current bridge into verification is the hidden `.specra/verify/` workspace or an explicit results file that an agent fills from test execution.
 
 The intended loop is:
 
@@ -229,7 +220,7 @@ If you need to move the contract root or generated workspace, add a project conf
 
 The only package most users should install is `specra`.
 
-The monorepo still contains internal packages for parser, IR, verification, and agent-context concerns so the codebase stays maintainable. Those support packages remain implementation details; the intended install surface is still a single package, `specra`.
+The monorepo still contains internal packages for parser, IR, and verification concerns so the codebase stays maintainable. Those support packages remain implementation details; the intended install surface is still a single package, `specra`.
 
 ## Principles
 

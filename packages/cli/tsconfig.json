@@ -8,9 +8,7 @@
   "references": [
     { "path": "../core" },
     { "path": "../ir" },
-    { "path": "../ai-context" },
-    { "path": "../verifier" },
-    { "path": "../verifier-typescript" }
+    { "path": "../verifier" }
   ],
   "include": ["src/**/*.ts"]
 }

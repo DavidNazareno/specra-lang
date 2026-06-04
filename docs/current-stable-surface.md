@@ -12,7 +12,6 @@ This document describes the parts of Specra that are considered stable enough to
 - Compact runtime artifact generation
 - Verification plan generation
 - Verification of observed results against expectations
-- TypeScript implementation snapshot extraction
 - SQLite-backed local state indexing
 - Nx-based monorepo workflow
 - Changesets-based versioning and changelog workflow
@@ -25,13 +24,8 @@ This document describes the parts of Specra that are considered stable enough to
 - `specra guide`
 - `specra inspect <file.scl.md|file.scl|folder>`
 - `specra check <file.scl.md|file.scl|folder>`
-- `specra context <file.scl.md|file.scl|folder>`
 - `specra refresh <file.scl.md|file.scl|folder> [--out <folder>]`
 - `specra proof <file.scl.md|file.scl|folder> [--out <folder>]`
-- `specra trial <file.scl.md|file.scl|folder> [--out <folder>] [--impl <snapshot.json>] [--results <proof.json>]`
-- `specra snapshot-template <file.scl.md|file.scl|folder>`
-- `specra extract-typescript <file.scl.md|file.scl|folder> --impl <snapshot.json>`
-- `specra generate <file.scl.md|file.scl|folder> [--out <folder>]`
 - `specra verify <file.scl.md|file.scl|folder> [--results <proof.json>]`
 
 ## Stable generated artifacts
@@ -39,7 +33,6 @@ This document describes the parts of Specra that are considered stable enough to
 - `.specra/ctx.json`
 - `.specra/plan.json`
 - `.specra/specra.db`
-- `.specra/verify/snap.json`
 - `.specra/verify/proof.json`
 - `.specra/verify/report.txt`
 
@@ -63,7 +56,6 @@ This document describes the parts of Specra that are considered stable enough to
 ## Not stable yet
 
 - Framework-specific extraction from live codebases
-- Automatic AST extraction from arbitrary TypeScript apps
 - Richer type system features such as enums or lists
 - MCP integration
 - Editor integration and language server support

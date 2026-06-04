@@ -1,8 +1,6 @@
-import { createAiContext } from "@specra/ai-context";
 import type { parseDocument } from "@specra/core";
 import { createVerificationPlan, normalizeDocument } from "@specra/ir";
 import type { ObservedExpectationResult } from "@specra/verifier";
-import type { createSnapshotTemplate } from "@specra/verifier-typescript";
 
 import type { GeneratedFile } from "../types.js";
 import { contextFileName, planFileName } from "../config.js";
@@ -56,18 +54,6 @@ export function createRefreshFiles(
       content: artifacts.plan,
     },
   ];
-}
-
-export function createObservedResultsTemplate(
-  snapshot: ReturnType<typeof createSnapshotTemplate>,
-) {
-  return encodeObservedResults(
-    snapshot.expectations.map((expectation) => ({
-      expectation: expectation.expectation,
-      outcome: expectation.outcome,
-      output: expectation.output,
-    })),
-  );
 }
 
 export function createProofTemplate(

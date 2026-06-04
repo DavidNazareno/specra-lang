@@ -37,5 +37,5 @@ Use this checklist before creating the public GitHub repository.
 
 - Add richer contract types such as `optional` and `list`
 - Add a verifier report output format for CI
-- Add a real TypeScript code extractor beyond snapshots
+- Add proof helpers for common test runners
 - Add example projects for additional domains

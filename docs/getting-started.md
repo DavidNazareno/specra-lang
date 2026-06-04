@@ -52,6 +52,8 @@ Specra currently supports these coding-agent targets:
 - `claude` for Claude Code
 - `codex` for Codex CLI and Codex agents
 
+For the full target breakdown, see [Agents](/agents).
+
 You can install project-local guidance with:
 
 ```bash

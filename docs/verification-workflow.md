@@ -36,21 +36,17 @@ When a project uses `specra install`, the generated agent guidance should direct
 
 A separate implementation artifact provides what the real code did or claims to do.
 
-Today the TypeScript-oriented path is snapshot-based:
+Today the intended path is proof-based:
 
-1. Generate a template:
-
-```bash
-pnpm specra snapshot-template examples/imports-app
-```
-
-2. Fill the snapshot from a TypeScript implementation or from tests, or let `specra trial --impl ...` write `proof.json` for you.
-
-3. Extract observed results:
+1. Generate a proof template:
 
 ```bash
-pnpm specra extract-typescript examples/imports-app --impl tests/fixtures/typescript-implementation-snapshot.json
+pnpm specra proof examples/imports-app
 ```
+
+2. Run the app's tests or reproduction steps.
+
+3. Replace the `__fill__` placeholders in `.specra/verify/proof.json` with what the tests actually observed.
 
 4. Verify observed behavior against the spec:
 

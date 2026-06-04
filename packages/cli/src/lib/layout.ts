@@ -5,10 +5,8 @@ import {
   planFileName,
   proofFileName,
   reportFileName,
-  snapshotFileName,
   stateDbFileName,
   verificationDirName,
-  warningsFileName,
 } from "../config.js";
 
 export function resolveContextPath(baseDir: string): string {
@@ -33,12 +31,4 @@ export function resolveProofPath(baseDir: string): string {
 
 export function resolveReportPath(baseDir: string): string {
   return path.join(resolveVerificationDir(baseDir), reportFileName);
-}
-
-export function resolveSnapshotPath(baseDir: string): string {
-  return path.join(resolveVerificationDir(baseDir), snapshotFileName);
-}
-
-export function resolveWarningsPath(baseDir: string): string {
-  return path.join(resolveVerificationDir(baseDir), warningsFileName);
 }

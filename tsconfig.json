@@ -4,9 +4,7 @@
     { "path": "./packages/ast" },
     { "path": "./packages/core" },
     { "path": "./packages/ir" },
-    { "path": "./packages/ai-context" },
     { "path": "./packages/verifier" },
-    { "path": "./packages/verifier-typescript" },
     { "path": "./packages/cli" }
   ]
 }

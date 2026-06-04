@@ -24,6 +24,7 @@ export default defineConfig({
         items: [
           { text: "Overview", link: "/" },
           { text: "Getting Started", link: "/getting-started" },
+          { text: "Agents", link: "/agents" },
           { text: "Current Stable Surface", link: "/current-stable-surface" },
         ],
       },

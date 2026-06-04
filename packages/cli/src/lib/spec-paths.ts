@@ -18,7 +18,7 @@ export async function resolveInputFile(
 }
 
 export async function resolveOutputDir(
-  command: "generate" | "refresh" | "trial" | string,
+  command: "refresh" | string,
   inputFile: string,
   explicitOut: string | undefined,
 ): Promise<string> {
@@ -31,7 +31,7 @@ export async function resolveOutputDir(
     return config.generatedDir;
   }
 
-  if (command === "trial" || command === "refresh" || command === "generate") {
+  if (command === "refresh") {
     return defaultGeneratedDir;
   }
 

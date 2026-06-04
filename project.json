@@ -13,10 +13,8 @@
         "@specra/ast:build",
         "@specra/core:build",
         "@specra/ir:build",
-        "@specra/ai-context:build",
         "@specra/verifier:build",
-        "@specra/verifier-typescript:build",
-        "@specra/cli:build"
+        "specra:build"
       ],
       "command": "node --test tests/**/*.test.mjs"
     }
