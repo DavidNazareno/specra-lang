@@ -10,13 +10,13 @@
     },
     "test": {
       "dependsOn": [
-        "@specra-lang/ast:build",
-        "@specra-lang/core:build",
-        "@specra-lang/ir:build",
-        "@specra-lang/verifier:build",
-        "specra-lang:build"
+        { "projects": ["@specra-lang/ast"], "target": "build" },
+        { "projects": ["@specra-lang/core"], "target": "build" },
+        { "projects": ["@specra-lang/ir"], "target": "build" },
+        { "projects": ["@specra-lang/verifier"], "target": "build" },
+        { "projects": ["specra-lang"], "target": "build" }
       ],
-      "command": "node --test tests/**/*.test.mjs"
+      "command": "pnpm exec nx run specra-lang:build && node --test tests/**/*.test.mjs"
     }
   }
 }
