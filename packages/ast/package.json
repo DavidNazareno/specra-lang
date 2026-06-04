@@ -1,5 +1,5 @@
 {
-  "name": "@specra/ast",
+  "name": "@specra-lang/ast",
   "version": "0.1.0",
   "description": "AST types for Specra contracts.",
   "license": "MIT",

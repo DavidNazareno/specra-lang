@@ -1,7 +1,7 @@
 import path from 'node:path'
 
-import type { ScalarValue, SpecraDocument } from '@specra/ast'
-import { parseDocument } from '@specra/core'
+import type { ScalarValue, SpecraDocument } from '@specra-lang/ast'
+import { parseDocument } from '@specra-lang/core'
 import { glob } from 'tinyglobby'
 
 import { defaultSpecDir } from '../config.js'
@@ -42,7 +42,7 @@ export async function resolveSpecFiles(inputPath: string): Promise<string[]> {
 
   if (!(await fileExists(inputPath))) {
     throw new Error(
-      `Spec input "${inputPath}" was not found. Run "specra init" first or pass an existing .scl or .scl.md file.`,
+      `Spec input "${inputPath}" was not found. Run "specra-lang init" first or pass an existing .scl or .scl.md file.`,
     )
   }
 

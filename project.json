@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/nx/schemas/project-schema.json",
-  "name": "specra-lang",
+  "name": "specra-workspace",
   "targets": {
     "lint": {
       "command": "biome check ."
@@ -10,13 +10,13 @@
     },
     "test": {
       "dependsOn": [
-        "@specra/ast:build",
-        "@specra/core:build",
-        "@specra/ir:build",
-        "@specra/verifier:build",
-        "specra:build"
+        { "projects": ["@specra-lang/ast"], "target": "build" },
+        { "projects": ["@specra-lang/core"], "target": "build" },
+        { "projects": ["@specra-lang/ir"], "target": "build" },
+        { "projects": ["@specra-lang/verifier"], "target": "build" },
+        { "projects": ["specra-lang"], "target": "build" }
       ],
-      "command": "node --test tests/**/*.test.mjs"
+      "command": "pnpm exec nx run specra-lang:build && node --test tests/**/*.test.mjs"
     }
   }
 }

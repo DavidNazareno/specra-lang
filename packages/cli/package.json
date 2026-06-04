@@ -1,5 +1,5 @@
 {
-  "name": "specra",
+  "name": "specra-lang",
   "version": "0.1.0",
   "description": "CLI for Specra contract authoring, agent guidance, and verification.",
   "license": "MIT",
@@ -14,7 +14,7 @@
     "node": ">=24.0.0"
   },
   "bin": {
-    "specra": "dist/index.js"
+    "specra-lang": "dist/index.js"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -23,10 +23,10 @@
   },
   "dependencies": {
     "@clack/prompts": "^1.4.0",
-    "@specra/ast": "workspace:*",
-    "@specra/core": "workspace:*",
-    "@specra/ir": "workspace:*",
-    "@specra/verifier": "workspace:*",
+    "@specra-lang/ast": "workspace:*",
+    "@specra-lang/core": "workspace:*",
+    "@specra-lang/ir": "workspace:*",
+    "@specra-lang/verifier": "workspace:*",
     "commander": "^14.0.3",
     "fs-extra": "^11.3.5",
     "jsonc-parser": "^3.3.1",

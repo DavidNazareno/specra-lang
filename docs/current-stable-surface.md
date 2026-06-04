@@ -4,6 +4,8 @@ This document describes the parts of Specra that are considered stable enough to
 
 ## Stable today
 
+- npm package name: `specra-lang`
+- installed CLI command: `specra-lang`
 - The first public release target and versioning baseline (`0.1.0`)
 - The `.scl.md` fenced-block structure and legacy `.scl` compatibility
 - `entity`, `operation`, `expectation`, `constraint`, and `target` statements
@@ -18,15 +20,15 @@ This document describes the parts of Specra that are considered stable enough to
 
 ## Stable CLI commands
 
-- `specra init [project-dir] [--template clean|hello-world] [--target codex,claude,opencode] [--yes]`
-- `specra install [--target codex,claude,opencode|all] [--location local|global]`
-- `specra uninstall [--target codex,claude,opencode|all] [--location local|global]`
-- `specra guide`
-- `specra inspect <file.scl.md|file.scl|folder>`
-- `specra check <file.scl.md|file.scl|folder>`
-- `specra refresh <file.scl.md|file.scl|folder> [--out <folder>]`
-- `specra proof <file.scl.md|file.scl|folder> [--out <folder>]`
-- `specra verify <file.scl.md|file.scl|folder> [--results <proof.json>]`
+- `specra-lang init [project-dir] [--template clean|hello-world] [--target codex,claude,opencode] [--yes]`
+- `specra-lang install [--target codex,claude,opencode|all] [--location local|global]`
+- `specra-lang uninstall [--target codex,claude,opencode|all] [--location local|global]`
+- `specra-lang guide`
+- `specra-lang inspect <file.scl.md|file.scl|folder>`
+- `specra-lang check <file.scl.md|file.scl|folder>`
+- `specra-lang refresh <file.scl.md|file.scl|folder> [--out <folder>]`
+- `specra-lang proof <file.scl.md|file.scl|folder> [--out <folder>]`
+- `specra-lang verify <file.scl.md|file.scl|folder> [--results <proof.json>]`
 
 ## Stable generated artifacts
 
@@ -44,7 +46,7 @@ This document describes the parts of Specra that are considered stable enough to
 - multiple `.scl.md` or legacy `.scl` files can be composed with `import "./relative-file.scl.md"` from root entrypoints in `specra/`
 - `.specra/` is the recommended hidden local output folder for generated state
 - `.specra/verify/` is the recommended hidden local output folder for verification inputs and reports
-- `specra/README.md` documents the app-local workflow after `specra init`
+- `specra/README.md` documents the app-local workflow after `specra-lang init`
 - local agent guidance can be installed into `AGENTS.md` and `CLAUDE.md`
 
 ## Stable agent targets

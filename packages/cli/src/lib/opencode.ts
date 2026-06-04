@@ -238,18 +238,18 @@ ${scopeLine}
 
 Required workflow:
 1. Read the relevant \`.scl.md\` contract files under \`specra/\`.
-   If you need a quick reference, run \`specra guide\`.
-2. Run \`specra check\` after spec changes.
-3. Run \`specra refresh\` to refresh agent context.
-4. Run \`specra proof\` to scaffold \`.specra/verify/proof.json\`.
+   If you need a quick reference, run \`specra-lang guide\`.
+2. Run \`specra-lang check\` after spec changes.
+3. Run \`specra-lang refresh\` to refresh agent context.
+4. Run \`specra-lang proof\` to scaffold \`.specra/verify/proof.json\`.
 5. Use \`.specra/ctx.json\`, \`.specra/plan.json\`, and \`.specra/specra.db\` when they exist.
 6. Execute tests or reproduction steps yourself before claiming success.
 7. Replace the \`__fill__\` placeholders in \`.specra/verify/proof.json\` with what the tests actually observed.
-8. Run \`specra verify\` or \`specra verify --results .specra/verify/proof.json\`.
+8. Run \`specra-lang verify\` or \`specra-lang verify --results .specra/verify/proof.json\`.
 
 Operating rules:
 - Treat the Specra contract as the source of truth over conflicting implementation details.
 - Prefer updating the implementation or the contract explicitly instead of silently diverging.
-- If \`specra/\` does not exist yet, suggest running \`specra init\`.
+- If \`specra/\` does not exist yet, suggest running \`specra-lang init\`.
 `
 }

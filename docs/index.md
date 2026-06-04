@@ -18,18 +18,27 @@ features:
   - title: Compact agent artifacts
     details: Refresh `.specra/ctx.json`, `.specra/plan.json`, and `.specra/specra.db` for low-noise agent context.
   - title: Proof-based verification
-    details: Scaffold `proof.json`, let the agent fill it from test results, and verify expectations with `specra verify`.
+    details: Scaffold `proof.json`, let the agent fill it from test results, and verify expectations with `specra-lang verify`.
 ---
 
 ## Core loop
 
 ```bash
-pnpm add -D specra
-specra init
-specra check
-specra refresh
-specra proof
-specra verify
+pnpm add -D specra-lang
+specra-lang init
+specra-lang check
+specra-lang refresh
+specra-lang proof
+specra-lang verify
+```
+
+Package: `specra-lang`  
+Command: `specra-lang`
+
+One-off usage without installation:
+
+```bash
+pnpm dlx specra-lang init
 ```
 
 Specra does not validate source code directly. It validates evidence supplied by the coding agent from tests or reproduction steps.

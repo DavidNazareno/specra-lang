@@ -1,5 +1,5 @@
 {
-  "name": "@specra/verifier",
+  "name": "@specra-lang/verifier",
   "version": "0.1.0",
   "description": "Expectation verification engine for Specra.",
   "license": "MIT",
@@ -24,7 +24,7 @@
     "check": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@specra/ast": "workspace:*",
-    "@specra/ir": "workspace:*"
+    "@specra-lang/ast": "workspace:*",
+    "@specra-lang/ir": "workspace:*"
   }
 }

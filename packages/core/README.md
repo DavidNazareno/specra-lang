@@ -1,4 +1,4 @@
-# @specra/core
+# @specra-lang/core
 
 Parser and validator for Specra contracts.
 

@@ -1,4 +1,4 @@
-import type { SpecraDocument, SpecraOperation } from '@specra/ast'
+import type { SpecraDocument, SpecraOperation } from '@specra-lang/ast'
 
 import {
   builtinOperationOutputs,

@@ -1,4 +1,4 @@
-import type { SpecraModel } from '@specra/ir'
+import type { SpecraModel } from '@specra-lang/ir'
 
 import { compareAssertion } from './assertions.js'
 import type {

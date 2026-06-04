@@ -69,15 +69,15 @@ export async function initializeSpecraProject(
     })
   } else if (detectedAgents.length > 0) {
     console.log(
-      '- Agent guidance was not installed. Run `specra install --target codex,claude,opencode` when you want local agent guidance.',
+      '- Agent guidance was not installed. Run `specra-lang install --target codex,claude,opencode` when you want local agent guidance.',
     )
   } else {
     console.log(
-      '- No supported agents were detected on this machine. Run `specra install --target codex,claude,opencode` when you want local agent guidance.',
+      '- No supported agents were detected on this machine. Run `specra-lang install --target codex,claude,opencode` when you want local agent guidance.',
     )
   }
 
-  console.log(`- Next step: pnpm specra refresh`)
+  console.log(`- Next step: pnpm specra-lang refresh`)
 }
 
 async function detectInitProjectMetadata(

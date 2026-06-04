@@ -114,15 +114,20 @@ Everything else is rejected by the parser.
 ## Core workflow
 
 ```bash
-pnpm add -D specra
-specra init
-specra check
-specra refresh
-specra proof
-specra verify
+pnpm add -D specra-lang
+specra-lang init
+specra-lang check
+specra-lang refresh
+specra-lang proof
+specra-lang verify
 ```
 
+Package name: `specra-lang`
+CLI command: `specra-lang`
+
 ## Additional commands
+
+For contributors working inside this repository:
 
 ```bash
 pnpm install
@@ -131,16 +136,36 @@ pnpm graph
 pnpm lint
 pnpm test
 pnpm changeset
-pnpm specra init --template hello-world
-pnpm specra install --target codex,claude,opencode --location local
+pnpm specra-lang init --template hello-world
+pnpm specra-lang install --target codex,claude,opencode --location local
 ```
 
 ## Install
 
-For end users, Specra is a single npm package:
+For end users, Specra is a single npm package named `specra-lang`, and it exposes the CLI command `specra-lang`.
+
+Install it in a project:
 
 ```bash
-pnpm add -D specra
+pnpm add -D specra-lang
+```
+
+Run it once without installing:
+
+```bash
+pnpm dlx specra-lang init
+# or
+npx specra-lang init
+```
+
+After installation, use the CLI as:
+
+```bash
+specra-lang init
+specra-lang check
+specra-lang refresh
+specra-lang proof
+specra-lang verify
 ```
 
 The compact runtime artifacts now include:
@@ -159,7 +184,7 @@ Specra currently supports:
 - Claude Code via `claude`
 - Codex CLI and Codex agents via `codex`
 
-You can install agent guidance locally or globally with `specra install`.
+You can install agent guidance locally or globally with `specra-lang install`.
 
 ## In a real app repository
 
@@ -174,26 +199,36 @@ my-next-app/
     README.md
 ```
 
-Start with:
+Start with one of these:
 
 ```bash
-pnpm specra init
+pnpm dlx specra-lang init
+# or, after installing specra-lang in the project:
+specra-lang init
 ```
 
-That creates `specra/` as the contract root, with a single `spec.scl.md` in the minimal case and `specra/README.md` for the local workflow. If you choose the `hello-world` template, Specra also adds `specra/features/hello-world.scl.md` so you can see a split contract from day one. `specra init` now guides the user through two choices: whether to start with a clean contract or a hello-world example, and which agents should get local guidance. After that, the CLI defaults to `specra/`, so `pnpm specra check`, `pnpm specra refresh`, `pnpm specra proof`, and `pnpm specra verify` work without repeating the input path, while generated agent-facing artifacts stay hidden under `.specra/`.
+That creates `specra/` as the contract root, with a single `spec.scl.md` in the minimal case and `specra/README.md` for the local workflow. If you choose the `hello-world` template, Specra also adds `specra/features/hello-world.scl.md` so you can see a split contract from day one. `specra-lang init` now guides the user through two choices: whether to start with a clean contract or a hello-world example, and which agents should get local guidance. After that, the CLI defaults to `specra/`, so `specra-lang check`, `specra-lang refresh`, `specra-lang proof`, and `specra-lang verify` work without repeating the input path, while generated agent-facing artifacts stay hidden under `.specra/`.
 
 If you prefer a non-interactive setup:
 
 ```bash
-pnpm specra init --yes
-pnpm specra init --yes --template hello-world
-pnpm specra init --yes --target opencode
+pnpm dlx specra-lang init --yes
+pnpm dlx specra-lang init --yes --template hello-world
+pnpm dlx specra-lang init --yes --target opencode
+```
+
+If you already installed `specra-lang`, the same commands can be run as:
+
+```bash
+specra-lang init --yes
+specra-lang init --yes --template hello-world
+specra-lang init --yes --target opencode
 ```
 
 If you prefer user-wide instructions instead of per-project files:
 
 ```bash
-pnpm specra install --target codex,claude,opencode --location global
+specra-lang install --target codex,claude,opencode --location global
 ```
 
 Today Specra verifies observed results against the contract. Automatic extraction from live Next.js tests is still a future step, so the current bridge into verification is the hidden `.specra/verify/` workspace or an explicit results file that an agent fills from test execution.
@@ -201,11 +236,11 @@ Today Specra verifies observed results against the contract. Automatic extractio
 The intended loop is:
 
 1. write or update the contract
-2. run `specra refresh`
-3. run `specra proof`
+2. run `specra-lang refresh`
+3. run `specra-lang proof`
 4. let the agent execute tests
 5. let the agent fill `proof.json` with observed values
-6. run `specra verify`
+6. run `specra-lang verify`
 
 If you need to move the contract root or generated workspace, add a project config file such as `specra.config.jsonc`:
 
@@ -218,9 +253,9 @@ If you need to move the contract root or generated workspace, add a project conf
 
 ## Package layout
 
-The only package most users should install is `specra`.
+The only package most users should install is `specra-lang`.
 
-The monorepo still contains internal packages for parser, IR, and verification concerns so the codebase stays maintainable. Those support packages remain implementation details; the intended install surface is still a single package, `specra`.
+The monorepo still contains internal packages for parser, IR, and verification concerns so the codebase stays maintainable. Those support packages remain implementation details; the intended install surface is still a single package, `specra-lang`.
 
 ## Principles
 

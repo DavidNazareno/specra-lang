@@ -1,5 +1,5 @@
 {
-  "name": "@specra/core",
+  "name": "@specra-lang/core",
   "version": "0.1.0",
   "description": "Parser and validator for Specra contracts.",
   "license": "MIT",
@@ -24,6 +24,6 @@
     "check": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@specra/ast": "workspace:*"
+    "@specra-lang/ast": "workspace:*"
   }
 }

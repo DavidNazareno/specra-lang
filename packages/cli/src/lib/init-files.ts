@@ -132,14 +132,14 @@ Keep the source contract here and let Specra write generated artifacts to \`.spe
 ## Suggested loop
 
 1. Edit the \`.scl.md\` files in this folder until they capture the workflow you want.
-2. Run \`pnpm specra check\` to validate the contract.
-3. Run \`pnpm specra refresh\` to update the compact agent-facing artifacts in \`.specra/\`.
-4. Run \`pnpm specra proof\` to scaffold \`.specra/verify/proof.json\`.
+2. Run \`pnpm specra-lang check\` to validate the contract.
+3. Run \`pnpm specra-lang refresh\` to update the compact agent-facing artifacts in \`.specra/\`.
+4. Run \`pnpm specra-lang proof\` to scaffold \`.specra/verify/proof.json\`.
 5. Ask your coding agent to read the relevant specs in \`specra/\`.
-   If it needs a syntax reference, tell it to run \`specra guide\`.
+   If it needs a syntax reference, tell it to run \`specra-lang guide\`.
 6. Implement the app behavior and collect observed results from tests.
 7. Replace the \`__fill__\` placeholders in \`proof.json\` with what the tests actually observed.
-8. Run \`pnpm specra verify\` or \`pnpm specra verify --results ...\` to compare proof against the contract.
+8. Run \`pnpm specra-lang verify\` or \`pnpm specra-lang verify --results ...\` to compare proof against the contract.
 
 ## Current reality
 

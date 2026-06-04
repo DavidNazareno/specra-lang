@@ -1,4 +1,4 @@
-import type { AuthMode } from '@specra/ast'
+import type { AuthMode } from '@specra-lang/ast'
 
 export const builtinTypes = new Set([
   'UUID',

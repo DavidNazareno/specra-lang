@@ -17,10 +17,10 @@ Use this checklist before creating the public GitHub repository.
 - Run `pnpm lint`
 - Run `pnpm test`
 - Run `pnpm docs:build`
-- Run `pnpm specra check examples/imports-app`
-- Run `pnpm specra refresh examples/imports-app`
-- Run `pnpm specra proof examples/imports-app`
-- Run `pnpm specra verify examples/imports-app --results tests/fixtures/observed-results.json`
+- Run `pnpm specra-lang check examples/imports-app`
+- Run `pnpm specra-lang refresh examples/imports-app`
+- Run `pnpm specra-lang proof examples/imports-app`
+- Run `pnpm specra-lang verify examples/imports-app --results tests/fixtures/observed-results.json`
 - Run `pnpm --filter specra pack`
 
 ## Open source readiness
