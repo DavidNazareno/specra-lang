@@ -13,9 +13,9 @@ Specra is a contract-and-verification layer for AI-assisted development.
 ## Recommended workflow
 
 1. Write or update the contract in \`specra/\`
-2. Run \`specra check\`
-3. Run \`specra refresh\`
-4. Run \`specra proof\` to scaffold \`.specra/verify/proof.json\`
+2. Run \`specra-lang check\`
+3. Run \`specra-lang refresh\`
+4. Run \`specra-lang proof\` to scaffold \`.specra/verify/proof.json\`
 5. Read:
    - \`.specra/ctx.json\`
    - \`.specra/plan.json\`
@@ -23,7 +23,7 @@ Specra is a contract-and-verification layer for AI-assisted development.
 6. Implement behavior in code
 7. Execute tests or reproduction steps
 8. Replace the \`__fill__\` placeholders in \`.specra/verify/proof.json\` with what the tests actually observed
-9. Run \`specra verify\` or \`specra verify --results .specra/verify/proof.json\`
+9. Run \`specra-lang verify\` or \`specra-lang verify --results .specra/verify/proof.json\`
 
 ## Minimal syntax
 

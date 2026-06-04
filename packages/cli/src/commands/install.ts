@@ -68,7 +68,7 @@ export async function installAgentInstructions(
     console.log(`- Updated ${result}`)
   }
   console.log(
-    '- Agents should now prefer the .scl.md files under specra/, plus specra refresh, specra proof, and specra verify.',
+    '- Agents should now prefer the .scl.md files under specra/, plus specra-lang refresh, specra-lang proof, and specra-lang verify.',
   )
 }
 

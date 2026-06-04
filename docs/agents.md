@@ -6,17 +6,17 @@ Specra currently supports these coding-agent targets:
 - `claude` for Claude Code
 - `codex` for Codex CLI and Codex agents
 
-## What `specra install` does
+## What `specra-lang install` does
 
-`specra install` writes guidance for the selected target so the agent follows the Specra loop:
+`specra-lang install` writes guidance for the selected target so the agent follows the Specra loop:
 
 1. read the contract in `specra/`
-2. run `specra check`
-3. run `specra refresh`
-4. run `specra proof`
+2. run `specra-lang check`
+3. run `specra-lang refresh`
+4. run `specra-lang proof`
 5. execute tests or reproduction steps
 6. fill `.specra/verify/proof.json`
-7. run `specra verify`
+7. run `specra-lang verify`
 
 ## Target details
 
@@ -25,7 +25,7 @@ Specra currently supports these coding-agent targets:
 Install with:
 
 ```bash
-specra install --target opencode
+specra-lang install --target opencode
 ```
 
 Specra writes:
@@ -38,7 +38,7 @@ Specra writes:
 Install with:
 
 ```bash
-specra install --target claude
+specra-lang install --target claude
 ```
 
 Specra writes:
@@ -50,7 +50,7 @@ Specra writes:
 Install with:
 
 ```bash
-specra install --target codex
+specra-lang install --target codex
 ```
 
 Specra writes:
@@ -62,13 +62,13 @@ Specra writes:
 Project-local install:
 
 ```bash
-specra install --target opencode --location local
+specra-lang install --target opencode --location local
 ```
 
 User-wide install:
 
 ```bash
-specra install --target opencode --location global
+specra-lang install --target opencode --location global
 ```
 
 The same pattern works for `claude` and `codex`.

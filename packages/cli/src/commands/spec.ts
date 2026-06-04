@@ -107,7 +107,7 @@ export async function prepareProof(
   console.log(
     '- Replace __fill__ values with what the tests actually observed.',
   )
-  console.log('- Run specra verify after updating proof.json.')
+  console.log('- Run specra-lang verify after updating proof.json.')
   return 0
 }
 
@@ -155,7 +155,7 @@ export async function verifySpec(
       return report.summary.failed > 0 || report.summary.missing > 0 ? 1 : 0
     } catch {
       console.error(
-        `Missing "--results <file.json>" for verify, and no default "${defaultResultsPath}" was found. Run "specra proof" to scaffold a proof file first.`,
+        `Missing "--results <file.json>" for verify, and no default "${defaultResultsPath}" was found. Run "specra-lang proof" to scaffold a proof file first.`,
       )
       return 1
     }

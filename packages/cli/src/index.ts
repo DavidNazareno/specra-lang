@@ -23,7 +23,7 @@ import type { CliOptions } from './types.js'
 const program = new Command()
 
 program
-  .name('specra')
+  .name('specra-lang')
   .description(
     'Intent-first specification and verification CLI for AI-assisted development',
   )
@@ -159,7 +159,7 @@ async function resolveRequiredInputFile(
       ? ` Check ${defaultProjectConfigFiles.join(' or ')} if you recently moved your contract root.`
       : ''
     throw new Error(
-      `No spec input was provided and "${config.contractRoot || defaultSpecDir}/" was not found. Run "specra init" first or pass a .scl.md file, legacy .scl file, or folder explicitly.${configHint}`,
+      `No spec input was provided and "${config.contractRoot || defaultSpecDir}/" was not found. Run "specra-lang init" first or pass a .scl.md file, legacy .scl file, or folder explicitly.${configHint}`,
     )
   }
 

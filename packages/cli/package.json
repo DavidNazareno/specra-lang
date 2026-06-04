@@ -1,5 +1,5 @@
 {
-  "name": "specra",
+  "name": "specra-lang",
   "version": "0.1.0",
   "description": "CLI for Specra contract authoring, agent guidance, and verification.",
   "license": "MIT",
@@ -14,7 +14,7 @@
     "node": ">=24.0.0"
   },
   "bin": {
-    "specra": "dist/index.js"
+    "specra-lang": "dist/index.js"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",

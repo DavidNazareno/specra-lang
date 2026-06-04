@@ -42,7 +42,7 @@ export async function resolveSpecFiles(inputPath: string): Promise<string[]> {
 
   if (!(await fileExists(inputPath))) {
     throw new Error(
-      `Spec input "${inputPath}" was not found. Run "specra init" first or pass an existing .scl or .scl.md file.`,
+      `Spec input "${inputPath}" was not found. Run "specra-lang init" first or pass an existing .scl or .scl.md file.`,
     )
   }
 

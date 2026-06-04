@@ -6,15 +6,15 @@ Current product shape
 
 - Source contract lives in `specra/*.scl.md`
 - Generated hidden state lives in `.specra/`
-- The user-facing npm package is `specra`
+- The user-facing npm package is `specra-lang` and it installs the `specra-lang` CLI command
 - The intended workflow is:
-  1. `specra init`
-  2. `specra check`
-  3. `specra refresh`
-  4. `specra proof`
+  1. `specra-lang init`
+  2. `specra-lang check`
+  3. `specra-lang refresh`
+  4. `specra-lang proof`
   5. agent runs tests
   6. agent fills `proof.json`
-  7. `specra verify`
+  7. `specra-lang verify`
 
 Current internal packages
 
@@ -22,19 +22,19 @@ Current internal packages
 - `@specra/core`: parser and validator
 - `@specra/ir`: normalized semantic model and verification plan
 - `@specra/verifier`: compares observed results against expectations
-- `specra`: user-facing CLI package
+- `specra-lang`: user-facing npm package for the `specra-lang` CLI
 
 Current CLI surface
 
-- `specra guide`
-- `specra init [project-dir]`
-- `specra install`
-- `specra uninstall`
-- `specra inspect <file.scl.md|file.scl|folder>`
-- `specra check <file.scl.md|file.scl|folder>`
-- `specra refresh <file.scl.md|file.scl|folder>`
-- `specra proof <file.scl.md|file.scl|folder>`
-- `specra verify <file.scl.md|file.scl|folder> [--results <proof.json>]`
+- `specra-lang guide`
+- `specra-lang init [project-dir]`
+- `specra-lang install`
+- `specra-lang uninstall`
+- `specra-lang inspect <file.scl.md|file.scl|folder>`
+- `specra-lang check <file.scl.md|file.scl|folder>`
+- `specra-lang refresh <file.scl.md|file.scl|folder>`
+- `specra-lang proof <file.scl.md|file.scl|folder>`
+- `specra-lang verify <file.scl.md|file.scl|folder> [--results <proof.json>]`
 
 Current generated state
 
@@ -47,10 +47,10 @@ Current generated state
 Current verification model
 
 1. `.scl.md` defines intent and expectations
-2. `specra refresh` derives compact runtime state
-3. `specra proof` scaffolds the evidence file
+2. `specra-lang refresh` derives compact runtime state
+3. `specra-lang proof` scaffolds the evidence file
 4. the coding agent runs tests and writes observed values into `proof.json`
-5. `specra verify` checks that proof against the contract
+5. `specra-lang verify` checks that proof against the contract
 
 Important constraints
 
@@ -63,7 +63,7 @@ Repository status
 - TypeScript monorepo with pnpm + Nx + Biome
 - Docs site with VitePress
 - GitHub Actions for CI, docs, and versioning
-- Single public install surface: `specra`
+- Single public install surface: `specra-lang` (CLI command: `specra-lang`)
 
 Short product framing
 

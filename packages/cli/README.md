@@ -1,12 +1,21 @@
-# specra
+# specra-lang
 
-Public Specra package for contract authoring, agent guidance, compact runtime generation, and verification.
+Public Specra npm package.
 
-Typical flow:
+- Package name: `specra-lang`
+- CLI command: `specra-lang`
+
+Typical flow after installation:
 
 ```bash
-specra init
-specra check
-specra refresh
-specra verify
+specra-lang init
+specra-lang check
+specra-lang refresh
+specra-lang verify
+```
+
+One-off usage without installation:
+
+```bash
+pnpm dlx specra-lang init
 ```
