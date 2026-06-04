@@ -1,4 +1,4 @@
-import { managedBlockEnd, managedBlockStart } from "./agent-targets.js";
+import { managedBlockEnd, managedBlockStart } from "./agents/agent-targets.js";
 
 export function upsertManagedBlock(current: string, block: string): string {
   if (

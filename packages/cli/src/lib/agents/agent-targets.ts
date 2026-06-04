@@ -6,7 +6,7 @@ import {
   installLocationSchema,
   parseDelimitedTargets,
   targetSchema,
-} from "./schemas.js";
+} from "../schemas.js";
 
 export const managedBlockStart = "<!-- SPECRA:START -->";
 export const managedBlockEnd = "<!-- SPECRA:END -->";

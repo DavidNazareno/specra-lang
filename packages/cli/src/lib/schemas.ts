@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { supportedTargets } from "./agent-constants.js";
+import { supportedTargets } from "./agents/agent-constants.js";
 
 export const installLocationSchema = z.enum(["global", "local"]);
 export const targetSchema = z.enum(supportedTargets);

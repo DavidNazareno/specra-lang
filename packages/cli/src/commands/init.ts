@@ -12,7 +12,7 @@ import {
   readJsonFile,
   writeTextFile,
 } from "../lib/fs.js";
-import { detectInstalledAgents } from "../lib/agent-detection.js";
+import { detectInstalledAgents } from "../lib/agents/agent-detection.js";
 import { createInitFiles } from "../lib/init-files.js";
 import { toSpecraIdentifier } from "../lib/identifiers.js";
 import { resolveInitOptions } from "./init-interactive.js";

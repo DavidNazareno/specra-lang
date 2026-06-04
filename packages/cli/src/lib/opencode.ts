@@ -8,7 +8,7 @@ import {
   type ParseError,
 } from "jsonc-parser";
 
-import type { InstallLocation } from "./agent-targets.js";
+import type { InstallLocation } from "./agents/agent-targets.js";
 import {
   ensureDir,
   fileExists,

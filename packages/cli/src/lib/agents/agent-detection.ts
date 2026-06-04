@@ -3,7 +3,7 @@ import path from "node:path";
 import os from "node:os";
 
 import type { SupportedTarget } from "./agent-targets.js";
-import { fileExists } from "./fs.js";
+import { fileExists } from "../fs.js";
 
 export async function detectInstalledAgents(): Promise<SupportedTarget[]> {
   const candidates: Array<{ path: string; target: SupportedTarget }> = [

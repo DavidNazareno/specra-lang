@@ -6,8 +6,8 @@ import {
   parseSingleTarget,
   parseTargets,
   resolveTargetFilePath,
-} from "../lib/agent-targets.js";
-import { renderManagedInstructionBlock } from "../lib/agent-templates.js";
+} from "../lib/agents/agent-targets.js";
+import { renderManagedInstructionBlock } from "../lib/agents/agent-templates.js";
 import {
   ensureDir,
   fileExists,

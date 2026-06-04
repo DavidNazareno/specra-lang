@@ -9,12 +9,12 @@ import {
 } from "@clack/prompts";
 
 import type { CliOptions } from "../types.js";
-import { supportedTargets } from "../lib/agent-constants.js";
+import { supportedTargets } from "../lib/agents/agent-constants.js";
 import {
   getTargetDefinition,
   type InstallLocation,
   type SupportedTarget,
-} from "../lib/agent-targets.js";
+} from "../lib/agents/agent-targets.js";
 
 export async function resolveInstallOptions(
   options: CliOptions,

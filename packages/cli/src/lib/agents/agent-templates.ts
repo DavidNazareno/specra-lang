@@ -3,7 +3,7 @@ import {
   managedBlockEnd,
   managedBlockStart,
   type SupportedTarget,
-} from "./agent-targets.js";
+} from "../agents/agent-targets.js";
 
 export function renderManagedInstructionBlock(target: SupportedTarget): string {
   const definition = getTargetDefinition(target);
