@@ -1,9 +1,5 @@
 import path from "node:path";
 
-import {
-  createAiContext,
-  renderAiImplementationBrief,
-} from "@specra/ai-context";
 import { validateDocument } from "@specra/core";
 import { createVerificationPlan, normalizeDocument } from "@specra/ir";
 import {
@@ -18,14 +14,27 @@ import {
 import type { CliOptions } from "../types.js";
 import { ensureDir, readTextFile, writeTextFile } from "../lib/fs.js";
 import {
-  createGenericFiles,
+  createRefreshFiles,
+  createRuntimeArtifacts,
   createObservedResultsTemplate,
-  renderTrialGuide,
+  decodeObservedResults,
+  encodeObservedResults,
 } from "../lib/generate-files.js";
 import { printIssues } from "../lib/args.js";
+import {
+  resolveContextPath,
+  resolvePlanPath,
+  resolveProofPath,
+  resolveReportPath,
+  resolveSnapshotPath,
+  resolveStateDbPath,
+  resolveVerificationDir,
+  resolveWarningsPath,
+} from "../lib/layout.js";
 import { loadProjectConfig } from "../lib/project-config.js";
 import { formatSpecLocation, loadDocument } from "../lib/spec-loader.js";
 import { resolveOutputDir } from "../lib/spec-paths.js";
+import { writeStateDatabase } from "../lib/state-db.js";
 
 export async function inspectSpec(inputFile: string): Promise<void> {
   const document = await loadDocument(inputFile);
@@ -56,17 +65,8 @@ export async function renderContext(inputFile: string): Promise<number> {
     return 1;
   }
 
-  const model = normalizeDocument(document);
-  console.log(
-    JSON.stringify(
-      {
-        context: createAiContext(model),
-        brief: renderAiImplementationBrief(model),
-      },
-      null,
-      2,
-    ),
-  );
+  const artifacts = createRuntimeArtifacts(document);
+  console.log(artifacts.ctx);
   return 0;
 }
 
@@ -83,12 +83,17 @@ export async function generateArtifacts(
   }
 
   const outDir = await resolveOutputDir("generate", inputFile, options.out);
-  const files = createGenericFiles(document);
+  const files = createRefreshFiles(document);
   for (const file of files) {
     const outputPath = path.join(outDir, file.path);
     await ensureDir(path.dirname(outputPath));
     await writeTextFile(outputPath, file.content);
   }
+
+  await persistStateDatabase(document, outDir, {
+    ctx: path.basename(resolveContextPath(outDir)),
+    plan: path.basename(resolvePlanPath(outDir)),
+  });
 
   console.log(`Generated ${files.length} files in ${outDir}`);
   return 0;
@@ -107,17 +112,20 @@ export async function refreshArtifacts(
   }
 
   const outDir = await resolveOutputDir("refresh", inputFile, options.out);
-  const files = createGenericFiles(document);
+  const files = createRefreshFiles(document);
   for (const file of files) {
     const outputPath = path.join(outDir, file.path);
     await ensureDir(path.dirname(outputPath));
     await writeTextFile(outputPath, file.content);
   }
 
+  await persistStateDatabase(document, outDir, {
+    ctx: path.basename(resolveContextPath(outDir)),
+    plan: path.basename(resolvePlanPath(outDir)),
+  });
+
   console.log(`Refreshed ${files.length} Specra files in ${outDir}`);
-  console.log(
-    "- Use AI-BRIEF.md, ai-context.json, and verification-plan.json for the agent loop.",
-  );
+  console.log("- Use ctx.json and plan.json for the agent loop.");
   return 0;
 }
 
@@ -136,23 +144,16 @@ export async function runTrial(
   const outDir = await resolveOutputDir("trial", inputFile, options.out);
   const model = normalizeDocument(document);
   const snapshotTemplate = createSnapshotTemplate(model);
+  const runtimeFiles = createRefreshFiles(document);
   const trialFiles = [
-    ...createGenericFiles(document),
+    ...runtimeFiles,
     {
-      path: "implementation-snapshot.template.json",
-      content: `${JSON.stringify(snapshotTemplate, null, 2)}\n`,
+      path: path.relative(outDir, resolveSnapshotPath(outDir)),
+      content: `${JSON.stringify(snapshotTemplate)}\n`,
     },
     {
-      path: "observed-results.template.json",
-      content: `${JSON.stringify(
-        createObservedResultsTemplate(snapshotTemplate),
-        null,
-        2,
-      )}\n`,
-    },
-    {
-      path: "TRIAL.md",
-      content: renderTrialGuide(inputFile, outDir),
+      path: path.relative(outDir, resolveProofPath(outDir)),
+      content: `${JSON.stringify(createObservedResultsTemplate(snapshotTemplate))}\n`,
     },
   ];
 
@@ -162,9 +163,9 @@ export async function runTrial(
     await writeTextFile(outputPath, file.content);
   }
 
-  let observedResultsSource = "observed-results.template.json";
+  let observedResultsSource = path.relative(outDir, resolveProofPath(outDir));
   let observedResults: Parameters<typeof verifyObservedResults>[1] =
-    createObservedResultsTemplate(snapshotTemplate);
+    decodeObservedResults(createObservedResultsTemplate(snapshotTemplate));
   let extractionWarnings: string[] = [];
 
   if (options.impl) {
@@ -175,36 +176,48 @@ export async function runTrial(
     const extraction = extractObservedResultsFromSnapshot(model, snapshot);
     observedResults = extraction.observedResults;
     extractionWarnings = extraction.warnings;
-    observedResultsSource = "observed-results.from-impl.json";
+    observedResultsSource = path.relative(outDir, resolveProofPath(outDir));
 
     await writeTextFile(
-      path.join(outDir, observedResultsSource),
-      `${JSON.stringify(observedResults, null, 2)}\n`,
+      resolveProofPath(outDir),
+      `${JSON.stringify(encodeObservedResults(observedResults))}\n`,
     );
 
     await writeTextFile(
-      path.join(outDir, "extraction-warnings.json"),
-      `${JSON.stringify(extractionWarnings, null, 2)}\n`,
+      resolveWarningsPath(outDir),
+      `${JSON.stringify(extractionWarnings)}\n`,
     );
   }
 
   if (options.results) {
     const rawResults = await readTextFile(options.results);
-    observedResults = JSON.parse(rawResults) as Parameters<
-      typeof verifyObservedResults
-    >[1];
+    observedResults = decodeObservedResults(JSON.parse(rawResults));
     observedResultsSource = path.basename(options.results);
   }
 
   const report = verifyObservedResults(model, observedResults);
   await writeTextFile(
-    path.join(outDir, "verification-report.txt"),
+    resolveReportPath(outDir),
     renderVerificationReport(report),
+  );
+
+  await persistStateDatabase(
+    document,
+    outDir,
+    {
+      ctx: path.basename(resolveContextPath(outDir)),
+      plan: path.basename(resolvePlanPath(outDir)),
+      proof: path.relative(outDir, resolveProofPath(outDir)),
+      report: path.relative(outDir, resolveReportPath(outDir)),
+      snap: path.relative(outDir, resolveSnapshotPath(outDir)),
+    },
+    observedResults,
+    report,
   );
 
   console.log(`Prepared trial in ${outDir}`);
   console.log(
-    `- Generated trial artifacts, templates, and guide for ${document.service ?? "UnnamedService"}.`,
+    `- Generated compact runtime and verification artifacts for ${document.service ?? "UnnamedService"}.`,
   );
   console.log(
     `- Verification report written from ${observedResultsSource} with ${report.summary.passed} passed, ${report.summary.failed} failed, ${report.summary.missing} missing.`,
@@ -245,7 +258,7 @@ export async function extractTypeScriptResults(
   console.log(
     JSON.stringify(
       {
-        observedResults: extraction.observedResults,
+        observedResults: encodeObservedResults(extraction.observedResults),
         warnings: extraction.warnings,
       },
       null,
@@ -285,17 +298,31 @@ export async function verifySpec(
 
   if (!options.results) {
     const config = await loadProjectConfig();
-    const defaultResultsPath = path.join(
-      config.generatedDir,
-      "observed-results.json",
-    );
+    const defaultResultsPath = resolveProofPath(config.generatedDir);
     try {
       const rawResults = await readTextFile(defaultResultsPath);
-      const observedResults = JSON.parse(rawResults) as Parameters<
-        typeof verifyObservedResults
-      >[1];
+      const observedResults = decodeObservedResults(JSON.parse(rawResults));
       const model = normalizeDocument(document);
       const report = verifyObservedResults(model, observedResults);
+      await writeTextFile(
+        resolveReportPath(config.generatedDir),
+        renderVerificationReport(report),
+      );
+      await persistStateDatabase(
+        document,
+        config.generatedDir,
+        {
+          ctx: path.basename(resolveContextPath(config.generatedDir)),
+          plan: path.basename(resolvePlanPath(config.generatedDir)),
+          proof: path.relative(config.generatedDir, defaultResultsPath),
+          report: path.relative(
+            config.generatedDir,
+            resolveReportPath(config.generatedDir),
+          ),
+        },
+        observedResults,
+        report,
+      );
 
       console.log(renderVerificationReport(report));
       return report.summary.failed > 0 || report.summary.missing > 0 ? 1 : 0;
@@ -308,12 +335,63 @@ export async function verifySpec(
   }
 
   const rawResults = await readTextFile(options.results);
-  const observedResults = JSON.parse(rawResults) as Parameters<
-    typeof verifyObservedResults
-  >[1];
+  const observedResults = decodeObservedResults(JSON.parse(rawResults));
   const model = normalizeDocument(document);
   const report = verifyObservedResults(model, observedResults);
+  const config = await loadProjectConfig();
+  await writeTextFile(
+    resolveReportPath(config.generatedDir),
+    renderVerificationReport(report),
+  );
+  await persistStateDatabase(
+    document,
+    config.generatedDir,
+    {
+      ctx: path.basename(resolveContextPath(config.generatedDir)),
+      plan: path.basename(resolvePlanPath(config.generatedDir)),
+      proof: path.relative(config.generatedDir, options.results),
+      report: path.relative(
+        config.generatedDir,
+        resolveReportPath(config.generatedDir),
+      ),
+    },
+    observedResults,
+    report,
+  );
 
   console.log(renderVerificationReport(report));
   return report.summary.failed > 0 || report.summary.missing > 0 ? 1 : 0;
+}
+
+async function persistStateDatabase(
+  document: Awaited<ReturnType<typeof loadDocument>>,
+  outDir: string,
+  artifacts: {
+    ctx: string;
+    plan: string;
+    proof?: string;
+    report?: string;
+    snap?: string;
+  },
+  observedResults?: Parameters<typeof verifyObservedResults>[1],
+  verificationReport?: ReturnType<typeof verifyObservedResults>,
+): Promise<void> {
+  await ensureDir(outDir);
+  await ensureDir(resolveVerificationDir(outDir));
+  const model = normalizeDocument(document);
+  const verificationPlan = createVerificationPlan(model);
+  writeStateDatabase(resolveStateDbPath(outDir), {
+    document,
+    model,
+    verificationPlan,
+    artifacts: {
+      ctx: artifacts.ctx,
+      plan: artifacts.plan,
+      ...(artifacts.proof ? { proof: artifacts.proof } : {}),
+      ...(artifacts.report ? { report: artifacts.report } : {}),
+      ...(artifacts.snap ? { snap: artifacts.snap } : {}),
+    },
+    observedResults,
+    verificationReport,
+  });
 }

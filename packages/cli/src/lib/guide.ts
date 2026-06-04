@@ -16,13 +16,13 @@ Specra is a contract-and-verification layer for AI-assisted development.
 2. Run \`specra check\`
 3. Run \`specra refresh\`
 4. Read:
-   - \`.specra/generated/AI-BRIEF.md\`
-   - \`.specra/generated/ai-context.json\`
-   - \`.specra/generated/verification-plan.json\`
+   - \`.specra/ctx.json\`
+   - \`.specra/plan.json\`
+   - \`.specra/specra.db\`
 5. Implement behavior in code
 6. Execute tests or reproduction steps
-7. Write observed behavior into \`.specra/generated/observed-results.json\`
-8. Run \`specra verify\` or \`specra verify --results .specra/generated/observed-results.json\`
+7. Write observed behavior into \`.specra/verify/proof.json\`
+8. Run \`specra verify\` or \`specra verify --results .specra/verify/proof.json\`
 
 ## Minimal syntax
 
@@ -30,12 +30,8 @@ Specra is a contract-and-verification layer for AI-assisted development.
 # Example
 
 \`\`\`specra
-import "./features/work-items.scl.md"
-
 service: ExampleApp
 goal: Describe the core workflow
-
-constraint auth_required: true
 
 target runtime: node
 target database: postgres

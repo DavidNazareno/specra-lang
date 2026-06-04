@@ -33,7 +33,7 @@ Anything else is rejected by the parser.
 Use imports to split a contract across multiple `.scl.md` files.
 
 ```txt
-import "./features/work-items.scl.md"
+import "./features/hello-world.scl.md"
 import "./shared/auth.scl.md"
 ```
 

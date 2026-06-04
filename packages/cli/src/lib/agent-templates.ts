@@ -19,13 +19,13 @@ When this repository contains \`specra/\`, treat the \`.scl.md\` files in that f
    If you need a quick reference, run \`specra guide\`.
 2. Run \`specra check\` after changes to the spec.
 3. Run \`specra refresh\` to refresh:
-   - \`.specra/generated/ai-context.json\`
-   - \`.specra/generated/AI-BRIEF.md\`
-   - \`.specra/generated/verification-plan.json\`
-4. Use those generated files as implementation guidance.
+   - \`.specra/ctx.json\`
+   - \`.specra/plan.json\`
+   - \`.specra/specra.db\`
+4. Use the spec plus those compact artifacts as implementation guidance.
 5. When validating behavior, execute the app tests or reproduction steps yourself.
-6. Convert the observed behavior into \`.specra/generated/observed-results.json\`.
-7. Run \`specra verify\` or \`specra verify --results .specra/generated/observed-results.json\`.
+6. Convert the observed behavior into \`.specra/verify/proof.json\`.
+7. Run \`specra verify\` or \`specra verify --results .specra/verify/proof.json\`.
 
 ## Operating rules
 

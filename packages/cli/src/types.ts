@@ -1,7 +1,9 @@
 export interface CliOptions {
   database?: string;
+  example?: boolean;
   force?: boolean;
   impl?: string;
+  installAgents?: boolean;
   location?: string;
   name?: string;
   out?: string;
@@ -9,6 +11,7 @@ export interface CliOptions {
   results?: string;
   runtime?: string;
   target?: string;
+  template?: string;
   yes?: boolean;
 }
 
@@ -23,3 +26,5 @@ export interface GeneratedFile {
   path: string;
   content: string;
 }
+
+export type InitTemplate = "clean" | "hello-world";

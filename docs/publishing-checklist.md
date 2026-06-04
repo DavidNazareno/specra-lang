@@ -19,6 +19,8 @@ Use this checklist before creating the public GitHub repository.
 - Run `pnpm specra check examples/imports-app`
 - Run `pnpm specra context examples/imports-app`
 - Run `pnpm specra verify examples/imports-app --results tests/fixtures/observed-results.json`
+- Run `pnpm --filter @specra/cli pack`
+- Run `pnpm --filter @specra/core pack`
 
 ## Open source readiness
 

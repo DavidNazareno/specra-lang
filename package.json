@@ -1,6 +1,8 @@
 {
   "name": "specra-lang",
   "version": "0.1.0",
+  "description": "Specra monorepo for contract-driven AI coding and verification.",
+  "license": "MIT",
   "private": true,
   "packageManager": "pnpm@10.33.0",
   "scripts": {

@@ -1,75 +1,59 @@
-import {
-  createAiContext,
-  renderAiImplementationBrief,
-} from "@specra/ai-context";
+import { createAiContext } from "@specra/ai-context";
 import type { parseDocument } from "@specra/core";
 import { createVerificationPlan, normalizeDocument } from "@specra/ir";
+import type { ObservedExpectationResult } from "@specra/verifier";
 import type { createSnapshotTemplate } from "@specra/verifier-typescript";
 
 import type { GeneratedFile } from "../types.js";
+import { contextFileName, planFileName } from "../config.js";
 
-export function createGenericFiles(
+export interface RuntimeArtifacts {
+  ctx: string;
+  plan: string;
+}
+
+export interface CompactObservedResult {
+  n: string;
+  o: string;
+  y?: Record<string, unknown>;
+  z?: string[];
+}
+
+export function createRuntimeArtifacts(
   document: ReturnType<typeof parseDocument>,
-): GeneratedFile[] {
-  const serviceName = document.service ?? "unnamed-service";
+): RuntimeArtifacts {
   const model = normalizeDocument(document);
   const verificationPlan = createVerificationPlan(model);
-  const aiContext = createAiContext(model);
-  const aiBrief = renderAiImplementationBrief(model);
-  const summary = [
-    `# ${serviceName}`,
-    "",
-    document.goal,
-    "",
-    "## Entities",
-    ...document.entities.map(
-      (entity) =>
-        `- ${entity.name}: ${entity.fields.map((field) => `${field.name}:${field.type}`).join(", ")}`,
-    ),
-    "",
-    "## Operations",
-    ...document.operations.map(
-      (operation) =>
-        `- ${operation.name}(${operation.input.join(", ")}) -> ${operation.output}`,
-    ),
-    "",
-    "## Expectations",
-    ...document.expectations.map(
-      (expectation) =>
-        `- ${expectation.name}: operation=${expectation.operation ?? "missing"}, assertions=${expectation.assertions.length}`,
-    ),
-    "",
-    "## Constraints",
-    ...Object.entries(document.constraints).map(
-      ([key, value]) => `- ${key}: ${String(value)}`,
-    ),
-    "",
-    "## Target",
-    ...Object.entries(document.target).map(
-      ([key, value]) => `- ${key}: ${String(value)}`,
-    ),
-  ].join("\n");
+  const ctx = createCompactContext(model);
+  const plan = verificationPlan.map((expectation) => ({
+    n: expectation.expectation,
+    o: expectation.operation,
+    a: expectation.auth,
+    i: expectation.input,
+    r: expectation.assertions.map((assertion) => [
+      assertion.target,
+      assertion.value,
+    ]),
+  }));
 
+  return {
+    ctx: `${JSON.stringify(ctx)}\n`,
+    plan: `${JSON.stringify(plan)}\n`,
+  };
+}
+
+export function createRefreshFiles(
+  document: ReturnType<typeof parseDocument>,
+): GeneratedFile[] {
+  const artifacts = createRuntimeArtifacts(document);
   return [
     {
-      path: "specra.json",
-      content: `${JSON.stringify(document, null, 2)}\n`,
+      path: contextFileName,
+      content: artifacts.ctx,
     },
     {
-      path: "SUMMARY.md",
-      content: `${summary}\n`,
-    },
-    {
-      path: "verification-plan.json",
-      content: `${JSON.stringify(verificationPlan, null, 2)}\n`,
-    },
-    {
-      path: "ai-context.json",
-      content: `${JSON.stringify(aiContext, null, 2)}\n`,
-    },
-    {
-      path: "AI-BRIEF.md",
-      content: aiBrief,
+      path: planFileName,
+      content: artifacts.plan,
     },
   ];
 }
@@ -77,47 +61,86 @@ export function createGenericFiles(
 export function createObservedResultsTemplate(
   snapshot: ReturnType<typeof createSnapshotTemplate>,
 ) {
-  return snapshot.expectations.map((expectation) => ({
-    expectation: expectation.expectation,
-    outcome: expectation.outcome,
-    output: expectation.output,
+  return encodeObservedResults(
+    snapshot.expectations.map((expectation) => ({
+      expectation: expectation.expectation,
+      outcome: expectation.outcome,
+      output: expectation.output,
+    })),
+  );
+}
+
+export function encodeObservedResults(
+  observedResults: ObservedExpectationResult[],
+): CompactObservedResult[] {
+  return observedResults.map((result) => ({
+    n: result.expectation,
+    o: result.outcome,
+    ...(result.output ? { y: result.output } : {}),
+    ...(result.notes?.length ? { z: result.notes } : {}),
   }));
 }
 
-export function renderTrialGuide(inputFile: string, outDir: string): string {
-  return `# Specra Trial
+export function decodeObservedResults(
+  payload: unknown,
+): ObservedExpectationResult[] {
+  if (!Array.isArray(payload)) {
+    throw new Error("Observed results must be a JSON array.");
+  }
 
-This folder is a ready-to-run local trial for the spec at \`${inputFile}\`.
+  return payload.map((entry) => {
+    if (
+      entry &&
+      typeof entry === "object" &&
+      "expectation" in entry &&
+      "outcome" in entry
+    ) {
+      const legacy = entry as ObservedExpectationResult;
+      return {
+        expectation: legacy.expectation,
+        outcome: legacy.outcome,
+        ...(legacy.output ? { output: legacy.output } : {}),
+        ...(legacy.notes ? { notes: legacy.notes } : {}),
+      };
+    }
 
-## Files
+    if (entry && typeof entry === "object" && "n" in entry && "o" in entry) {
+      const compact = entry as CompactObservedResult;
+      return {
+        expectation: compact.n,
+        outcome: compact.o,
+        ...(compact.y ? { output: compact.y } : {}),
+        ...(compact.z ? { notes: compact.z } : {}),
+      };
+    }
 
-- \`specra.json\`: parsed source contract
-- \`SUMMARY.md\`: human-readable summary
-- \`verification-plan.json\`: expectation checklist
-- \`ai-context.json\`: agent-friendly context payload
-- \`AI-BRIEF.md\`: implementation brief for an agent
-- \`implementation-snapshot.template.json\`: template to fill from a TypeScript implementation or tests
-- \`observed-results.template.json\`: direct verifier input if you want to skip the snapshot path
-- \`verification-report.txt\`: current verifier output for this trial
+    throw new Error("Observed results contain an invalid entry.");
+  });
+}
 
-## Fastest path
-
-1. Read \`AI-BRIEF.md\`.
-2. Implement the declared operations in your app or test harness.
-3. Fill \`implementation-snapshot.template.json\` or \`observed-results.template.json\`.
-4. Re-run one of these commands:
-
-\`\`\`bash
-pnpm specra trial ${inputFile} --out ${outDir} --impl ${outDir}/implementation-snapshot.template.json
-pnpm specra trial ${inputFile} --out ${outDir} --results ${outDir}/observed-results.template.json
-\`\`\`
-
-5. Open \`verification-report.txt\` and inspect passes, failures, and missing expectations.
-
-## Notes
-
-- \`--impl\` follows the TypeScript snapshot path.
-- \`--results\` skips extraction and verifies directly.
-- The generated template usually starts as passing for documented expectations, so replace placeholder values with real observed behavior before trusting the report.
-`;
+function createCompactContext(model: ReturnType<typeof normalizeDocument>) {
+  return {
+    s: model.service,
+    g: model.goal,
+    e: model.entities.map((entity) => ({
+      n: entity.name,
+      f: entity.fields.map((field) => [field.name, field.type]),
+    })),
+    o: model.operations.map((operation) => ({
+      n: operation.name,
+      i: operation.input,
+      o: operation.output,
+    })),
+    c: model.constraints,
+    t: model.target,
+    x: model.expectations.map((expectation) => ({
+      n: expectation.name,
+      o: expectation.operation,
+      a: expectation.auth,
+      r: expectation.assertions.map((assertion) => [
+        assertion.target,
+        assertion.value,
+      ]),
+    })),
+  };
 }

@@ -23,11 +23,11 @@ This repository currently includes:
 - Nx orchestration for project graph and task running
 - a Markdown-first `.scl.md` parser and validator, with legacy `.scl` compatibility
 - a normalized semantic model
-- AI-context artifacts
+- compact runtime artifacts for agents
 - a basic expectation verifier
 - a first TypeScript-oriented implementation snapshot extractor
 - a CLI
-- a generic export flow for normalized specifications
+- a local SQLite state index for compact retrieval
 
 ## Documentation
 
@@ -122,6 +122,7 @@ pnpm lint
 pnpm test
 pnpm changeset
 pnpm specra init
+pnpm specra init --template hello-world
 pnpm specra install --target codex,claude,opencode --location local
 pnpm specra check
 pnpm specra context
@@ -131,20 +132,17 @@ pnpm specra extract-typescript --impl tests/fixtures/typescript-implementation-s
 pnpm specra trial
 ```
 
-The generated verification artifacts now include:
+The compact runtime artifacts now include:
 
-- `specra.json`
-- `SUMMARY.md`
-- `verification-plan.json`
-- `ai-context.json`
-- `AI-BRIEF.md`
+- `.specra/ctx.json`
+- `.specra/plan.json`
+- `.specra/specra.db`
 
-The new `trial` flow also scaffolds:
+The `trial` flow also scaffolds verification artifacts:
 
-- `implementation-snapshot.template.json`
-- `observed-results.template.json`
-- `verification-report.txt`
-- `TRIAL.md`
+- `.specra/verify/snap.json`
+- `.specra/verify/proof.json`
+- `.specra/verify/report.txt`
 
 ## In a real app repository
 
@@ -155,9 +153,7 @@ my-next-app/
   app/
   components/
   specra/
-    service.scl.md
-    features/
-      work-items.scl.md
+    spec.scl.md
     README.md
 ```
 
@@ -167,7 +163,15 @@ Start with:
 pnpm specra init
 ```
 
-That creates `specra/` as the contract root, with a shared `service.scl.md`, a first feature slice under `specra/features/`, and `specra/README.md` for the local workflow. The root file already imports the feature file, so the default shape is ready for multi-file contracts. During `specra init`, Specra also installs local agent guidance automatically for supported agents it detects on your machine. After that, the CLI defaults to `specra/`, so `pnpm specra check`, `pnpm specra refresh`, and `pnpm specra verify` work without repeating the input path, while generated agent-facing artifacts stay hidden under `.specra/`.
+That creates `specra/` as the contract root, with a single `spec.scl.md` in the minimal case and `specra/README.md` for the local workflow. If you choose the `hello-world` template, Specra also adds `specra/features/hello-world.scl.md` so you can see a split contract from day one. `specra init` now guides the user through two choices: whether to start with a clean contract or a hello-world example, and which agents should get local guidance. After that, the CLI defaults to `specra/`, so `pnpm specra check`, `pnpm specra refresh`, and `pnpm specra verify` work without repeating the input path, while generated agent-facing artifacts stay hidden under `.specra/`.
+
+If you prefer a non-interactive setup:
+
+```bash
+pnpm specra init --yes
+pnpm specra init --yes --template hello-world
+pnpm specra init --yes --target opencode
+```
 
 If you prefer user-wide instructions instead of per-project files:
 
@@ -175,7 +179,7 @@ If you prefer user-wide instructions instead of per-project files:
 pnpm specra install --target codex,claude,opencode --location global
 ```
 
-Today Specra verifies observed results against the contract. Automatic extraction from live Next.js tests is still a future step, so the current bridge into verification is the hidden `.specra/generated/` workspace or an explicit results file.
+Today Specra verifies observed results against the contract. Automatic extraction from live Next.js tests is still a future step, so the current bridge into verification is the hidden `.specra/verify/` workspace or an explicit results file.
 
 If you need to move the contract root or generated workspace, add a project config file such as `specra.config.jsonc`:
 
@@ -191,7 +195,7 @@ If you need to move the contract root or generated workspace, add a project conf
 - `@specra/ast`: syntax-level document types
 - `@specra/core`: parser and validator for `.scl.md`, with legacy `.scl` support
 - `@specra/ir`: normalized semantic model and verification plan builder
-- `@specra/ai-context`: stable context artifacts for coding agents
+- `@specra/ai-context`: compact context serialization for coding agents
 - `@specra/verifier`: compares observed implementation results against expectations
 - `@specra/verifier-typescript`: turns a TypeScript implementation snapshot into observed expectation results
 - `@specra/cli`: user-facing commands over all the above

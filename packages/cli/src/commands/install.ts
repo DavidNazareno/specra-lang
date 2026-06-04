@@ -41,6 +41,14 @@ export async function installAgentInstructions(
 
   const results = [];
   for (const target of targets) {
+    if (target === "opencode") {
+      const extraPaths = await syncOpencodeProjectFiles(projectDir, location);
+      for (const extraPath of extraPaths) {
+        results.push(path.relative(projectDir, extraPath) || extraPath);
+      }
+      continue;
+    }
+
     const filePath = resolveTargetFilePath(target, location, projectDir);
     const content = renderManagedInstructionBlock(target);
     const current = (await fileExists(filePath))
@@ -53,13 +61,6 @@ export async function installAgentInstructions(
     results.push(
       path.relative(projectDir, filePath) || path.basename(filePath),
     );
-
-    if (target === "opencode") {
-      const extraPaths = await syncOpencodeProjectFiles(projectDir, location);
-      for (const extraPath of extraPaths) {
-        results.push(path.relative(projectDir, extraPath) || extraPath);
-      }
-    }
   }
 
   console.log(
@@ -82,6 +83,14 @@ export async function uninstallAgentInstructions(
   const removed: string[] = [];
 
   for (const target of targets) {
+    if (target === "opencode") {
+      const extraPaths = await removeOpencodeProjectFiles(projectDir, location);
+      for (const extraPath of extraPaths) {
+        removed.push(path.relative(projectDir, extraPath) || extraPath);
+      }
+      continue;
+    }
+
     const filePath = resolveTargetFilePath(target, location, projectDir);
     if (!(await fileExists(filePath))) {
       continue;
@@ -103,13 +112,6 @@ export async function uninstallAgentInstructions(
     removed.push(
       path.relative(projectDir, filePath) || path.basename(filePath),
     );
-
-    if (target === "opencode") {
-      const extraPaths = await removeOpencodeProjectFiles(projectDir, location);
-      for (const extraPath of extraPaths) {
-        removed.push(path.relative(projectDir, extraPath) || extraPath);
-      }
-    }
   }
 
   console.log(

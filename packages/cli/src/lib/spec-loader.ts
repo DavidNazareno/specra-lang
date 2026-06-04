@@ -33,7 +33,7 @@ export async function resolveSpecFiles(inputPath: string): Promise<string[]> {
 
     if (resolvedEntrypoints.length === 0) {
       throw new Error(
-        `No root .scl or .scl.md files were found under "${inputPath}". Add a root contract file such as "service.scl.md" or pass one explicitly.`,
+        `No root .scl or .scl.md files were found under "${inputPath}". Add a root contract file such as "spec.scl.md" or pass one explicitly.`,
       );
     }
 

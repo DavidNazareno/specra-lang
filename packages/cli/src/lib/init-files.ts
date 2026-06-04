@@ -1,18 +1,65 @@
 import path from "node:path";
 
-import type { GeneratedFile, InitProjectMetadata } from "../types.js";
+import type {
+  GeneratedFile,
+  InitProjectMetadata,
+  InitTemplate,
+} from "../types.js";
 export function createInitFiles(
   metadata: InitProjectMetadata,
+  template: InitTemplate,
 ): GeneratedFile[] {
+  const isHelloWorld = template === "hello-world";
+  const featureFileName = "hello-world.scl.md";
+  const featureTitle = "Hello World";
+  const serviceDescription = isHelloWorld
+    ? "This root contract file imports a tiny hello-world example so you can test the full Specra loop quickly."
+    : "This root contract file gives you the smallest possible Specra contract so you can shape it to your app without pre-imposed structure.";
+  const featureDescription =
+    "This feature file gives you the smallest useful example of a Specra contract.";
+
   const serviceSpec = `# ${metadata.displayName}
 
-This root contract file defines shared product intent and imports the first feature slice.
+${serviceDescription}
 
 \`\`\`specra
-import "./features/work-items.scl.md"
+service: ${metadata.serviceName}
+goal: ${
+    isHelloWorld
+      ? `Return a predictable hello-world response for ${metadata.displayName}`
+      : `Describe the first behavior you want to build for ${metadata.displayName}`
+  }
+
+entity ExampleResponse:
+message: string
+end
+
+operation describeFirstBehavior:
+input:
+output: ExampleResponse
+end
+
+expectation describeFirstBehavior_success:
+operation: describeFirstBehavior
+auth: optional
+expect outcome: success
+expect output.message: "replace me"
+end
+
+target runtime: ${metadata.runtime}
+target database: ${metadata.database}
+\`\`\`
+`;
+
+  const helloWorldRootSpec = `# ${metadata.displayName}
+
+${serviceDescription}
+
+\`\`\`specra
+import "./features/${featureFileName}"
 
 service: ${metadata.serviceName}
-goal: Describe the first user-visible workflow for ${metadata.displayName}
+goal: Return a predictable hello-world response for ${metadata.displayName}
 
 constraint auth_required: true
 
@@ -21,9 +68,32 @@ target database: ${metadata.database}
 \`\`\`
 `;
 
-  const featureSpec = `# Work Items
+  const featureSpec = isHelloWorld
+    ? `# ${featureTitle}
 
-This feature file holds the first operation and its expectations.
+${featureDescription}
+
+\`\`\`specra
+entity HelloResponse:
+message: string
+end
+
+operation getHello:
+input:
+output: HelloResponse
+end
+
+expectation getHello_success:
+operation: getHello
+auth: optional
+expect outcome: success
+expect output.message: "hello world"
+end
+\`\`\`
+`
+    : `# ${featureTitle}
+
+${featureDescription}
 
 \`\`\`specra
 entity WorkItem:
@@ -63,7 +133,7 @@ Keep the source contract here and let Specra write generated artifacts to \`.spe
 
 1. Edit the \`.scl.md\` files in this folder until they capture the workflow you want.
 2. Run \`pnpm specra check\` to validate the contract.
-3. Run \`pnpm specra refresh\` to update the hidden agent-facing artifacts in \`.specra/generated/\`.
+3. Run \`pnpm specra refresh\` to update the compact agent-facing artifacts in \`.specra/\`.
 4. Ask your coding agent to read the relevant specs in \`specra/\`.
    If it needs a syntax reference, tell it to run \`specra guide\`.
 5. Implement the app behavior and collect observed results.
@@ -71,8 +141,8 @@ Keep the source contract here and let Specra write generated artifacts to \`.spe
 
 ## Current reality
 
-- Specra already validates \`.scl.md\`, generates agent-facing context, and verifies observed results.
-- Extraction from real Next.js tests is not automatic yet. For now, bridge into Specra through the snapshot or observed-results files.
+- Specra already validates \`.scl.md\`, writes compact runtime state, and verifies observed results.
+- Extraction from real Next.js tests is not automatic yet. For now, bridge into Specra through the snapshot or proof files.
 - The goal of this folder is to keep the contract next to the app source, inside the same repository, with minimal visible footprint.
 `;
 
@@ -86,12 +156,16 @@ Keep the source contract here and let Specra write generated artifacts to \`.spe
       content: guide,
     },
     {
-      path: path.join("specra", "service.scl.md"),
-      content: serviceSpec,
+      path: path.join("specra", "spec.scl.md"),
+      content: isHelloWorld ? helloWorldRootSpec : serviceSpec,
     },
-    {
-      path: path.join("specra", "features", "work-items.scl.md"),
-      content: featureSpec,
-    },
+    ...(isHelloWorld
+      ? [
+          {
+            path: path.join("specra", "features", featureFileName),
+            content: featureSpec,
+          },
+        ]
+      : []),
   ];
 }

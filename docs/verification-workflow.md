@@ -17,19 +17,19 @@ That is the source of truth.
 
 Specra derives normalized artifacts from the source spec:
 
-- `verification-plan.json`
-- `ai-context.json`
-- `AI-BRIEF.md`
+- `.specra/plan.json`
+- `.specra/ctx.json`
+- `.specra/specra.db`
 
 These artifacts are used by coding agents or downstream tooling.
 
 When a project uses `specra install`, the generated agent guidance should direct the coding agent to:
 
 1. read the relevant `.scl.md` files under `specra/`
-2. refresh `.specra/generated/` with `specra refresh`
+2. refresh `.specra/` with `specra refresh`
 3. run the app's tests or reproduction steps
-4. write `.specra/generated/observed-results.json`
-5. call `specra verify` or `specra verify --results .specra/generated/observed-results.json`
+4. write `.specra/verify/proof.json`
+5. call `specra verify` or `specra verify --results .specra/verify/proof.json`
 
 ## 3. Observed implementation results
 
@@ -43,7 +43,7 @@ Today the TypeScript-oriented path is snapshot-based:
 pnpm specra snapshot-template examples/imports-app
 ```
 
-2. Fill the snapshot from a TypeScript implementation or from tests.
+2. Fill the snapshot from a TypeScript implementation or from tests, or let `specra trial --impl ...` write `proof.json` for you.
 
 3. Extract observed results:
 

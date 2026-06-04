@@ -9,16 +9,17 @@ This document describes the parts of Specra that are considered stable enough to
 - `entity`, `operation`, `expectation`, `constraint`, and `target` statements
 - Parser and validator behavior for the currently documented syntax
 - Normalized semantic model generation
-- AI context artifact generation
+- Compact runtime artifact generation
 - Verification plan generation
 - Verification of observed results against expectations
 - TypeScript implementation snapshot extraction
+- SQLite-backed local state indexing
 - Nx-based monorepo workflow
 - Changesets-based versioning and changelog workflow
 
 ## Stable CLI commands
 
-- `specra init [project-dir]`
+- `specra init [project-dir] [--template clean|hello-world] [--target codex,claude,opencode] [--yes]`
 - `specra install [--target codex,claude,opencode|all] [--location local|global]`
 - `specra uninstall [--target codex,claude,opencode|all] [--location local|global]`
 - `specra guide`
@@ -26,23 +27,20 @@ This document describes the parts of Specra that are considered stable enough to
 - `specra check <file.scl.md|file.scl|folder>`
 - `specra context <file.scl.md|file.scl|folder>`
 - `specra refresh <file.scl.md|file.scl|folder> [--out <folder>]`
-- `specra trial <file.scl.md|file.scl|folder> [--out <folder>] [--impl <snapshot.json>] [--results <observed-results.json>]`
+- `specra trial <file.scl.md|file.scl|folder> [--out <folder>] [--impl <snapshot.json>] [--results <proof.json>]`
 - `specra snapshot-template <file.scl.md|file.scl|folder>`
 - `specra extract-typescript <file.scl.md|file.scl|folder> --impl <snapshot.json>`
 - `specra generate <file.scl.md|file.scl|folder> [--out <folder>]`
-- `specra verify <file.scl.md|file.scl|folder> [--results <observed-results.json>]`
+- `specra verify <file.scl.md|file.scl|folder> [--results <proof.json>]`
 
 ## Stable generated artifacts
 
-- `specra.json`
-- `SUMMARY.md`
-- `verification-plan.json`
-- `ai-context.json`
-- `AI-BRIEF.md`
-- `implementation-snapshot.template.json`
-- `observed-results.template.json`
-- `verification-report.txt`
-- `TRIAL.md`
+- `.specra/ctx.json`
+- `.specra/plan.json`
+- `.specra/specra.db`
+- `.specra/verify/snap.json`
+- `.specra/verify/proof.json`
+- `.specra/verify/report.txt`
 
 ## Stable repository convention
 
@@ -50,7 +48,8 @@ This document describes the parts of Specra that are considered stable enough to
 - `specra.config.jsonc` or `specra.config.json` can override the contract root and generated output directory
 - `.scl.md` files can hold human Markdown plus fenced `specra` blocks
 - multiple `.scl.md` or legacy `.scl` files can be composed with `import "./relative-file.scl.md"` from root entrypoints in `specra/`
-- `.specra/generated/` is the recommended hidden local output folder for generated agent-facing artifacts
+- `.specra/` is the recommended hidden local output folder for generated state
+- `.specra/verify/` is the recommended hidden local output folder for verification inputs and reports
 - `specra/README.md` documents the app-local workflow after `specra init`
 - local agent guidance can be installed into `AGENTS.md` and `CLAUDE.md`
 

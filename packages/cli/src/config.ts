@@ -1,7 +1,15 @@
 import path from "node:path";
 
 export const defaultSpecDir = "specra";
-export const defaultGeneratedDir = path.join(".specra", "generated");
+export const defaultGeneratedDir = ".specra";
+export const verificationDirName = "verify";
+export const stateDbFileName = "specra.db";
+export const contextFileName = "ctx.json";
+export const planFileName = "plan.json";
+export const proofFileName = "proof.json";
+export const reportFileName = "report.txt";
+export const snapshotFileName = "snap.json";
+export const warningsFileName = "warn.json";
 export const defaultProjectConfigFiles = [
   "specra.config.jsonc",
   "specra.config.json",

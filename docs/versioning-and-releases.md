@@ -24,14 +24,16 @@ Then answer the prompt and commit the generated file in `.changeset/`.
 
 ## GitHub workflow
 
-Two workflows are configured:
+Changesets is configured locally in `.changeset/`, but GitHub workflows still need to be added in the public repository.
+
+Recommended workflows:
 
 - `CI`
 - `Versioning`
 
 ### CI
 
-Runs on pull requests and pushes to `main`:
+Should run on pull requests and pushes to `main`:
 
 - `pnpm build`
 - `pnpm lint`
@@ -39,7 +41,7 @@ Runs on pull requests and pushes to `main`:
 
 ### Versioning
 
-Runs on pushes to `main` and uses Changesets to:
+Should run on pushes to `main` and use Changesets to:
 
 - detect unreleased changesets
 - create or update a version PR
@@ -55,10 +57,14 @@ Runs on pushes to `main` and uses Changesets to:
 
 ## Notes
 
-The repository is not set up for npm publishing yet. The current pipeline focuses on:
+The repository now includes the minimum local setup for npm publishing:
 
-- package version bookkeeping
-- changelog updates
-- release discipline
+- public package manifests
+- per-package README files
+- Changesets config
 
-Publishing packages can be added later once the public package surface is stable.
+Before the first public release, you still need:
+
+- the final GitHub repository URL
+- CI and versioning workflows
+- an npm token in the publishing environment

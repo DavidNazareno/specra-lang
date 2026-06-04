@@ -45,6 +45,10 @@ program
   .option("--name <serviceName>")
   .option("--runtime <runtime>")
   .option("--database <database>")
+  .option("--template <clean|hello-world>")
+  .option("--example", "Use the hello-world example scaffold")
+  .option("--target <targets>")
+  .option("--yes")
   .option("--force")
   .action(async (projectDir: string | undefined, ...args: unknown[]) => {
     const command = getCommandFromActionArgs(args);

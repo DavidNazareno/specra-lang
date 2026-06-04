@@ -243,10 +243,10 @@ Required workflow:
    If you need a quick reference, run \`specra guide\`.
 2. Run \`specra check\` after spec changes.
 3. Run \`specra refresh\` to refresh agent context.
-4. Use \`.specra/generated/AI-BRIEF.md\` and \`ai-context.json\` when they exist.
+4. Use \`.specra/ctx.json\`, \`.specra/plan.json\`, and \`.specra/specra.db\` when they exist.
 5. Execute tests or reproduction steps yourself before claiming success.
-6. Write observed behavior into \`.specra/generated/observed-results.json\`.
-7. Run \`specra verify\` or \`specra verify --results .specra/generated/observed-results.json\`.
+6. Write observed behavior into \`.specra/verify/proof.json\`.
+7. Run \`specra verify\` or \`specra verify --results .specra/verify/proof.json\`.
 
 Operating rules:
 - Treat the Specra contract as the source of truth over conflicting implementation details.
