@@ -18,7 +18,7 @@
     "graph": "nx graph --open=false",
     "specra-lang": "node packages/cli/dist/index.js",
     "test": "nx run specra-workspace:test",
-    "version-packages": "changeset version",
+    "version-packages": "changeset version && pnpm format",
     "release": "changeset publish",
     "prepare": "husky"
   },
