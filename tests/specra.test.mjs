@@ -611,7 +611,10 @@ test('cli install writes managed agent instructions locally', async () => {
   assert.match(agents, /# Existing agent notes/)
   assert.match(agents, /Specra for Codex/)
   assert.match(agents, /specra-lang proof/)
-  assert.match(agents, /specra-lang verify --results \.specra\/verify\/proof\.json/)
+  assert.match(
+    agents,
+    /specra-lang verify --results \.specra\/verify\/proof\.json/,
+  )
 })
 
 test('cli uninstall removes only the managed local block', async () => {
