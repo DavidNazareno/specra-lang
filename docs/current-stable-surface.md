@@ -27,6 +27,7 @@ This document describes the parts of Specra that are considered stable enough to
 - `specra check <file.scl.md|file.scl|folder>`
 - `specra context <file.scl.md|file.scl|folder>`
 - `specra refresh <file.scl.md|file.scl|folder> [--out <folder>]`
+- `specra proof <file.scl.md|file.scl|folder> [--out <folder>]`
 - `specra trial <file.scl.md|file.scl|folder> [--out <folder>] [--impl <snapshot.json>] [--results <proof.json>]`
 - `specra snapshot-template <file.scl.md|file.scl|folder>`
 - `specra extract-typescript <file.scl.md|file.scl|folder> --impl <snapshot.json>`
@@ -52,6 +53,12 @@ This document describes the parts of Specra that are considered stable enough to
 - `.specra/verify/` is the recommended hidden local output folder for verification inputs and reports
 - `specra/README.md` documents the app-local workflow after `specra init`
 - local agent guidance can be installed into `AGENTS.md` and `CLAUDE.md`
+
+## Stable agent targets
+
+- `opencode`
+- `claude` for Claude Code
+- `codex` for Codex CLI and Codex agents
 
 ## Not stable yet
 

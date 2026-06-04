@@ -11,7 +11,7 @@ source of truth that captures:
 - constraints
 - target platforms
 
-That source can then be validated, transformed, and generated into real application code.
+That source can then be validated, turned into compact agent-facing artifacts, and checked against observed behavior.
 
 ## Status
 
@@ -112,7 +112,18 @@ Inside an `expectation` block, only these lines are allowed:
 
 Everything else is rejected by the parser.
 
-## Commands
+## Core workflow
+
+```bash
+pnpm add -D specra
+specra init
+specra check
+specra refresh
+specra proof
+specra verify
+```
+
+## Additional commands
 
 ```bash
 pnpm install
@@ -121,15 +132,20 @@ pnpm graph
 pnpm lint
 pnpm test
 pnpm changeset
-pnpm specra init
 pnpm specra init --template hello-world
 pnpm specra install --target codex,claude,opencode --location local
-pnpm specra check
 pnpm specra context
-pnpm specra refresh
 pnpm specra snapshot-template
 pnpm specra extract-typescript --impl tests/fixtures/typescript-implementation-snapshot.json
 pnpm specra trial
+```
+
+## Install
+
+For end users, Specra is a single npm package:
+
+```bash
+pnpm add -D specra
 ```
 
 The compact runtime artifacts now include:
@@ -143,6 +159,16 @@ The `trial` flow also scaffolds verification artifacts:
 - `.specra/verify/snap.json`
 - `.specra/verify/proof.json`
 - `.specra/verify/report.txt`
+
+## Current agent support
+
+Specra currently supports:
+
+- OpenCode via `opencode`
+- Claude Code via `claude`
+- Codex CLI and Codex agents via `codex`
+
+You can install agent guidance locally or globally with `specra install`.
 
 ## In a real app repository
 
@@ -163,7 +189,7 @@ Start with:
 pnpm specra init
 ```
 
-That creates `specra/` as the contract root, with a single `spec.scl.md` in the minimal case and `specra/README.md` for the local workflow. If you choose the `hello-world` template, Specra also adds `specra/features/hello-world.scl.md` so you can see a split contract from day one. `specra init` now guides the user through two choices: whether to start with a clean contract or a hello-world example, and which agents should get local guidance. After that, the CLI defaults to `specra/`, so `pnpm specra check`, `pnpm specra refresh`, and `pnpm specra verify` work without repeating the input path, while generated agent-facing artifacts stay hidden under `.specra/`.
+That creates `specra/` as the contract root, with a single `spec.scl.md` in the minimal case and `specra/README.md` for the local workflow. If you choose the `hello-world` template, Specra also adds `specra/features/hello-world.scl.md` so you can see a split contract from day one. `specra init` now guides the user through two choices: whether to start with a clean contract or a hello-world example, and which agents should get local guidance. After that, the CLI defaults to `specra/`, so `pnpm specra check`, `pnpm specra refresh`, `pnpm specra proof`, and `pnpm specra verify` work without repeating the input path, while generated agent-facing artifacts stay hidden under `.specra/`.
 
 If you prefer a non-interactive setup:
 
@@ -181,6 +207,15 @@ pnpm specra install --target codex,claude,opencode --location global
 
 Today Specra verifies observed results against the contract. Automatic extraction from live Next.js tests is still a future step, so the current bridge into verification is the hidden `.specra/verify/` workspace or an explicit results file.
 
+The intended loop is:
+
+1. write or update the contract
+2. run `specra refresh`
+3. run `specra proof`
+4. let the agent execute tests
+5. let the agent fill `proof.json` with observed values
+6. run `specra verify`
+
 If you need to move the contract root or generated workspace, add a project config file such as `specra.config.jsonc`:
 
 ```jsonc
@@ -190,15 +225,11 @@ If you need to move the contract root or generated workspace, add a project conf
 }
 ```
 
-## Current package roles
+## Package layout
 
-- `@specra/ast`: syntax-level document types
-- `@specra/core`: parser and validator for `.scl.md`, with legacy `.scl` support
-- `@specra/ir`: normalized semantic model and verification plan builder
-- `@specra/ai-context`: compact context serialization for coding agents
-- `@specra/verifier`: compares observed implementation results against expectations
-- `@specra/verifier-typescript`: turns a TypeScript implementation snapshot into observed expectation results
-- `@specra/cli`: user-facing commands over all the above
+The only package most users should install is `specra`.
+
+The monorepo still contains internal packages for parser, IR, verification, and agent-context concerns so the codebase stays maintainable. Those support packages remain implementation details; the intended install surface is still a single package, `specra`.
 
 ## Principles
 

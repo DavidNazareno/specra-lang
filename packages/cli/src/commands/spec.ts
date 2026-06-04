@@ -15,6 +15,7 @@ import type { CliOptions } from "../types.js";
 import { ensureDir, readTextFile, writeTextFile } from "../lib/fs.js";
 import {
   createRefreshFiles,
+  createProofTemplate,
   createRuntimeArtifacts,
   createObservedResultsTemplate,
   decodeObservedResults,
@@ -126,6 +127,40 @@ export async function refreshArtifacts(
 
   console.log(`Refreshed ${files.length} Specra files in ${outDir}`);
   console.log("- Use ctx.json and plan.json for the agent loop.");
+  return 0;
+}
+
+export async function prepareProof(
+  inputFile: string,
+  options: CliOptions,
+): Promise<number> {
+  const document = await loadDocument(inputFile);
+  const issues = validateDocument(document);
+
+  if (issues.length > 0) {
+    printIssues(issues);
+    return 1;
+  }
+
+  const outDir = await resolveOutputDir("proof", inputFile, options.out);
+  const proofPath = resolveProofPath(outDir);
+  const proofTemplate = createProofTemplate(document);
+
+  await ensureDir(path.dirname(proofPath));
+  await writeTextFile(proofPath, `${JSON.stringify(proofTemplate)}\n`);
+
+  await persistStateDatabase(document, outDir, {
+    ctx: path.basename(resolveContextPath(outDir)),
+    plan: path.basename(resolvePlanPath(outDir)),
+    proof: path.relative(outDir, proofPath),
+  });
+
+  console.log(`Prepared proof template in ${proofPath}`);
+  console.log("- Run your tests or reproduction steps.");
+  console.log(
+    "- Replace __fill__ values with what the tests actually observed.",
+  );
+  console.log("- Run specra verify after updating proof.json.");
   return 0;
 }
 
@@ -328,7 +363,7 @@ export async function verifySpec(
       return report.summary.failed > 0 || report.summary.missing > 0 ? 1 : 0;
     } catch {
       console.error(
-        `Missing "--results <file.json>" for verify, and no default "${defaultResultsPath}" was found.`,
+        `Missing "--results <file.json>" for verify, and no default "${defaultResultsPath}" was found. Run "specra proof" to scaffold a proof file first.`,
       );
       return 1;
     }

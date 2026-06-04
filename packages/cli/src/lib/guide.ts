@@ -15,14 +15,15 @@ Specra is a contract-and-verification layer for AI-assisted development.
 1. Write or update the contract in \`specra/\`
 2. Run \`specra check\`
 3. Run \`specra refresh\`
-4. Read:
+4. Run \`specra proof\` to scaffold \`.specra/verify/proof.json\`
+5. Read:
    - \`.specra/ctx.json\`
    - \`.specra/plan.json\`
    - \`.specra/specra.db\`
-5. Implement behavior in code
-6. Execute tests or reproduction steps
-7. Write observed behavior into \`.specra/verify/proof.json\`
-8. Run \`specra verify\` or \`specra verify --results .specra/verify/proof.json\`
+6. Implement behavior in code
+7. Execute tests or reproduction steps
+8. Replace the \`__fill__\` placeholders in \`.specra/verify/proof.json\` with what the tests actually observed
+9. Run \`specra verify\` or \`specra verify --results .specra/verify/proof.json\`
 
 ## Minimal syntax
 
@@ -77,5 +78,6 @@ end
 - Legacy plain \`.scl\` files are still supported
 - Legacy inline operation syntax like \`operation createThing(Input) -> Output\` is still supported
 - The contract is the source of truth when implementation and spec disagree
+- \`proof.json\` is evidence provided by the agent from tests or reproduction steps, not by static code inspection
 `;
 }

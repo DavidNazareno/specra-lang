@@ -218,6 +218,56 @@ test("cli guide prints syntax and workflow help", async () => {
   assert.match(stdout, /# Specra Guide/);
   assert.match(stdout, /Recommended workflow/);
   assert.match(stdout, /service: ExampleApp/);
+  assert.match(stdout, /specra proof/);
+});
+
+test("cli proof scaffolds a compact proof template", async () => {
+  const tempDir = await mkdtemp(path.join(os.tmpdir(), "specra-proof-"));
+
+  await mkdir(path.join(tempDir, "specra"), { recursive: true });
+  await writeFile(
+    path.join(tempDir, "specra", "spec.scl.md"),
+    `# Proof App
+
+\`\`\`specra
+service: ProofApp
+goal: Capture observed results from tests
+
+entity PhonePriceListResponse:
+count: number
+end
+
+operation listPhonePrices:
+input:
+output: PhonePriceListResponse
+end
+
+expectation listPhonePrices_success:
+operation: listPhonePrices
+auth: optional
+expect outcome: success
+expect output.count: 1
+end
+
+target runtime: node
+target database: none
+\`\`\`
+`,
+  );
+
+  const { stdout } = await runCli(["proof"], tempDir);
+  const proof = JSON.parse(
+    await readFile(
+      path.join(tempDir, ".specra", "verify", "proof.json"),
+      "utf8",
+    ),
+  );
+
+  assert.match(stdout, /Prepared proof template/);
+  assert.equal(proof.length, 1);
+  assert.equal(proof[0].n, "listPhonePrices_success");
+  assert.equal(proof[0].o, "__fill__");
+  assert.equal(proof[0].y.count, "__fill__");
 });
 
 test("cli respects project config for contract root and generated output", async () => {
@@ -624,6 +674,7 @@ test("cli install writes managed agent instructions locally", async () => {
   assert.match(stdout, /Installed Specra agent guidance/);
   assert.match(agents, /# Existing agent notes/);
   assert.match(agents, /Specra for Codex/);
+  assert.match(agents, /specra proof/);
   assert.match(agents, /specra verify --results \.specra\/verify\/proof\.json/);
 });
 

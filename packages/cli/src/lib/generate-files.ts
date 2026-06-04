@@ -70,6 +70,21 @@ export function createObservedResultsTemplate(
   );
 }
 
+export function createProofTemplate(
+  document: ReturnType<typeof parseDocument>,
+): CompactObservedResult[] {
+  const model = normalizeDocument(document);
+  const verificationPlan = createVerificationPlan(model);
+
+  return verificationPlan.map((expectation) => ({
+    n: expectation.expectation,
+    o: "__fill__",
+    ...(buildOutputTemplate(expectation.assertions)
+      ? { y: buildOutputTemplate(expectation.assertions) }
+      : {}),
+  }));
+}
+
 export function encodeObservedResults(
   observedResults: ObservedExpectationResult[],
 ): CompactObservedResult[] {
@@ -143,4 +158,46 @@ function createCompactContext(model: ReturnType<typeof normalizeDocument>) {
       ]),
     })),
   };
+}
+
+function buildOutputTemplate(
+  assertions: ReturnType<typeof createVerificationPlan>[number]["assertions"],
+): Record<string, unknown> | undefined {
+  const outputAssertions = assertions.filter((assertion) =>
+    assertion.target.startsWith("output."),
+  );
+
+  if (outputAssertions.length === 0) {
+    return undefined;
+  }
+
+  const template: Record<string, unknown> = {};
+  for (const assertion of outputAssertions) {
+    assignPath(template, assertion.target.replace(/^output\./, ""), "__fill__");
+  }
+
+  return template;
+}
+
+function assignPath(
+  target: Record<string, unknown>,
+  path: string,
+  value: unknown,
+): void {
+  const segments = path.split(".");
+  let current: Record<string, unknown> = target;
+
+  for (const [index, segment] of segments.entries()) {
+    if (index === segments.length - 1) {
+      current[segment] = value;
+      return;
+    }
+
+    const next = current[segment];
+    if (!next || typeof next !== "object" || Array.isArray(next)) {
+      current[segment] = {};
+    }
+
+    current = current[segment] as Record<string, unknown>;
+  }
 }

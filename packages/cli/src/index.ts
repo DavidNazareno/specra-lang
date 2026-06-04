@@ -14,6 +14,7 @@ import {
   generateArtifacts,
   inspectSpec,
   printSnapshotTemplate,
+  prepareProof,
   refreshArtifacts,
   renderContext,
   runTrial,
@@ -115,6 +116,22 @@ program
     const options = command.opts<CliOptions>();
     process.exitCode = await refreshArtifacts(
       await resolveRequiredInputFile("refresh", inputFile),
+      options,
+    );
+  });
+
+program
+  .command("proof")
+  .argument("[file]")
+  .option("--out <directory>")
+  .description(
+    "Scaffold a compact proof.json file that maps tests or observed behavior to expectations",
+  )
+  .action(async (inputFile: string | undefined, ...args: unknown[]) => {
+    const command = getCommandFromActionArgs(args);
+    const options = command.opts<CliOptions>();
+    process.exitCode = await prepareProof(
+      await resolveRequiredInputFile("proof", inputFile),
       options,
     );
   });

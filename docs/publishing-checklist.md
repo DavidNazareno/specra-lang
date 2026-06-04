@@ -16,11 +16,12 @@ Use this checklist before creating the public GitHub repository.
 - Run `pnpm build`
 - Run `pnpm lint`
 - Run `pnpm test`
+- Run `pnpm docs:build`
 - Run `pnpm specra check examples/imports-app`
-- Run `pnpm specra context examples/imports-app`
+- Run `pnpm specra refresh examples/imports-app`
+- Run `pnpm specra proof examples/imports-app`
 - Run `pnpm specra verify examples/imports-app --results tests/fixtures/observed-results.json`
-- Run `pnpm --filter @specra/cli pack`
-- Run `pnpm --filter @specra/core pack`
+- Run `pnpm --filter specra pack`
 
 ## Open source readiness
 
@@ -30,7 +31,7 @@ Use this checklist before creating the public GitHub repository.
 - Create initial labels such as `bug`, `enhancement`, `docs`, `language`, `verifier`
 - Create the first milestone, for example `v0.2.0`
 - Verify GitHub Actions are enabled for the repository
-- Verify the `Versioning` workflow can create pull requests
+- Verify the `CI`, `Versioning`, and `Docs` workflows succeed
 
 ## Suggested first issues
 

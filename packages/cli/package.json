@@ -1,5 +1,5 @@
 {
-  "name": "@specra/cli",
+  "name": "specra",
   "version": "0.1.0",
   "description": "CLI for Specra contract authoring, agent guidance, and verification.",
   "license": "MIT",

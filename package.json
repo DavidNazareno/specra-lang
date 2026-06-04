@@ -9,7 +9,10 @@
     "build": "nx run-many -t build --all --exclude specra-lang",
     "check": "nx run-many -t check --all --exclude specra-lang",
     "changeset": "changeset",
-    "dev:cli": "pnpm --filter @specra/cli dev",
+    "dev:cli": "pnpm --filter specra dev",
+    "docs:build": "vitepress build docs",
+    "docs:dev": "vitepress dev docs",
+    "docs:preview": "vitepress preview docs",
     "lint": "nx run specra-lang:lint",
     "format": "nx run specra-lang:format",
     "graph": "nx graph --open=false",
@@ -24,6 +27,7 @@
     "@nx/workspace": "^22.7.4",
     "@types/node": "^24.0.0",
     "nx": "^22.7.4",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitepress": "^1.6.4"
   }
 }

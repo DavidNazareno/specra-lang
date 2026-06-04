@@ -24,12 +24,11 @@ Then answer the prompt and commit the generated file in `.changeset/`.
 
 ## GitHub workflow
 
-Changesets is configured locally in `.changeset/`, but GitHub workflows still need to be added in the public repository.
-
-Recommended workflows:
+Changesets is configured locally in `.changeset/`, and the repository now includes the baseline workflows:
 
 - `CI`
 - `Versioning`
+- `Docs`
 
 ### CI
 
@@ -53,7 +52,9 @@ Should run on pushes to `main` and use Changesets to:
 1. Set the default branch to `main` if it is not already.
 2. Push the repository contents.
 3. Verify that GitHub Actions are enabled.
-4. Merge a PR with a sample changeset to confirm the versioning flow works.
+4. Add `NPM_TOKEN` to repository secrets for publishing.
+5. Enable GitHub Pages with GitHub Actions as the source.
+6. Merge a PR with a sample changeset to confirm the versioning flow works.
 
 ## Notes
 
@@ -66,5 +67,5 @@ The repository now includes the minimum local setup for npm publishing:
 Before the first public release, you still need:
 
 - the final GitHub repository URL
-- CI and versioning workflows
-- an npm token in the publishing environment
+- an `NPM_TOKEN` in the publishing environment
+- GitHub Pages enabled if you want the docs site published immediately

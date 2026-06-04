@@ -41,28 +41,28 @@
       },
       "correctness": {
         "noUnusedImports": "off", // Deactivated in Astro to prevent imports used in templates from being deleted
-        "useArrayLiterals": "warn", // TypeScript Standard: Usar literales de array
-        "noNewSymbol": "warn", // TypeScript Standard: No usar new Symbol()
-        "noConstAssign": "warn", // TypeScript Standard: No reasignar constantes
-        "noEmptyCharacterClassInRegex": "warn", // TypeScript Standard: No clases de caracteres vacías en regex
-        "noEmptyPattern": "warn", // TypeScript Standard: No patrones de destructuring vacíos
-        "noGlobalObjectCalls": "warn", // TypeScript Standard: No llamar objetos globales como funciones
-        "noInnerDeclarations": "warn", // TypeScript Standard: No declaraciones internas
-        "noInvalidConstructorSuper": "warn", // TypeScript Standard: Super válido en constructores
-        "noNonoctalDecimalEscape": "warn", // TypeScript Standard: No escapes decimales no octales
-        "noPrecisionLoss": "warn", // TypeScript Standard: No pérdida de precisión numérica
-        "noSetterReturn": "warn", // TypeScript Standard: No return en setters
-        "noSwitchDeclarations": "warn", // TypeScript Standard: No declaraciones en switch sin bloques
-        "noUndeclaredVariables": "warn", // TypeScript Standard: No variables no declaradas
-        "noUnreachable": "warn", // TypeScript Standard: No código inalcanzable
-        "noUnreachableSuper": "warn", // TypeScript Standard: No super inalcanzable
-        "noUnsafeFinally": "warn", // TypeScript Standard: No control flow inseguro en finally
-        "noUnsafeOptionalChaining": "warn", // TypeScript Standard: Optional chaining seguro
-        "noUnusedLabels": "warn", // TypeScript Standard: No labels no utilizados
+        "useArrayLiterals": "warn", // TypeScript Standard: Use array literals
+        "noNewSymbol": "warn", // TypeScript Standard: Do not use new Symbol()
+        "noConstAssign": "warn", // TypeScript Standard: Do not reassign constants
+        "noEmptyCharacterClassInRegex": "warn", // TypeScript Standard: No empty character classes in regex
+        "noEmptyPattern": "warn", // TypeScript Standard: No empty destructuring patterns
+        "noGlobalObjectCalls": "warn", // TypeScript Standard: Do not call global objects as functions
+        "noInnerDeclarations": "warn", // TypeScript Standard: No inner declarations
+        "noInvalidConstructorSuper": "warn", // TypeScript Standard: Valid super usage in constructors
+        "noNonoctalDecimalEscape": "warn", // TypeScript Standard: No non-octal decimal escapes
+        "noPrecisionLoss": "warn", // TypeScript Standard: No numeric precision loss
+        "noSetterReturn": "warn", // TypeScript Standard: No return in setters
+        "noSwitchDeclarations": "warn", // TypeScript Standard: No declarations in switch without blocks
+        "noUndeclaredVariables": "warn", // TypeScript Standard: No undeclared variables
+        "noUnreachable": "warn", // TypeScript Standard: No unreachable code
+        "noUnreachableSuper": "warn", // TypeScript Standard: No unreachable super
+        "noUnsafeFinally": "warn", // TypeScript Standard: No unsafe control flow in finally
+        "noUnsafeOptionalChaining": "warn", // TypeScript Standard: Safe optional chaining
+        "noUnusedLabels": "warn", // TypeScript Standard: No unused labels
         "noUnusedVariables": "off", // Deactivated in Astro to prevent frontmatter variables from being marked as unused
-        "useIsNan": "warn", // TypeScript Standard: Usar isNaN para comparaciones
-        "useValidForDirection": "warn", // TypeScript Standard: Dirección válida en for loops
-        "useYield": "warn", // TypeScript Standard: Usar yield en generators
+        "useIsNan": "warn", // TypeScript Standard: Use isNaN for comparisons
+        "useValidForDirection": "warn", // TypeScript Standard: Valid direction in for loops
+        "useYield": "warn", // TypeScript Standard: Use yield in generators
         "useJsxKeyInIterable": "off", // Rule is buggy, revisit later
         "useExhaustiveDependencies": "off", // Community feedback on this rule has been poor, we will continue with ESLint
         "noUnnecessaryContinue": "off" // Turned off due to developer preferences
@@ -71,70 +71,70 @@
         "noDangerouslySetInnerHtml": "off" // Covered by Conformance
       },
       "style": {
-        "useFragmentSyntax": "warn", // TypeScript Standard: Usar sintaxis de Fragment
-        "noYodaExpression": "warn", // TypeScript Standard: No expresiones Yoda
-        "useDefaultParameterLast": "warn", // TypeScript Standard: Parámetros por defecto al final
-        "noArguments": "warn", // TypeScript Standard: No usar arguments, usar rest parameters
-        "noCommaOperator": "warn", // TypeScript Standard: No usar operador coma
-        "noImplicitBoolean": "warn", // TypeScript Standard: No conversiones booleanas implícitas
-        "noInferrableTypes": "warn", // TypeScript Standard: No tipos inferibles explícitos
-        "noNamespace": "warn", // TypeScript Standard: No usar namespace
-        "noNegationElse": "warn", // TypeScript Standard: No negación en else
-        "noNonNullAssertion": "warn", // TypeScript Standard: Evitar non-null assertion
-        "noParameterAssign": "warn", // TypeScript Standard: No reasignar parámetros
+        "useFragmentSyntax": "warn", // TypeScript Standard: Use Fragment syntax
+        "noYodaExpression": "warn", // TypeScript Standard: No Yoda expressions
+        "useDefaultParameterLast": "warn", // TypeScript Standard: Default parameters last
+        "noArguments": "warn", // TypeScript Standard: Do not use arguments, use rest parameters
+        "noCommaOperator": "warn", // TypeScript Standard: Do not use the comma operator
+        "noImplicitBoolean": "warn", // TypeScript Standard: No implicit boolean conversions
+        "noInferrableTypes": "warn", // TypeScript Standard: No explicit inferable types
+        "noNamespace": "warn", // TypeScript Standard: Do not use namespace
+        "noNegationElse": "warn", // TypeScript Standard: No negation in else branches
+        "noNonNullAssertion": "warn", // TypeScript Standard: Avoid non-null assertions
+        "noParameterAssign": "warn", // TypeScript Standard: Do not reassign parameters
         "noParameterProperties": "warn", // TypeScript Standard: No parameter properties
-        "noRestrictedGlobals": "warn", // TypeScript Standard: No globales restringidos
-        "noShoutyConstants": "warn", // TypeScript Standard: No constantes en mayúsculas
-        "noVar": "warn", // TypeScript Standard: No usar var
-        "useAsConstAssertion": "warn", // TypeScript Standard: Usar as const
-        "useBlockStatements": "warn", // TypeScript Standard: Usar bloques de declaraciones
-        "useCollapsedElseIf": "warn", // TypeScript Standard: Usar else if colapsado
-        "useConsistentArrayType": "warn", // TypeScript Standard: Tipo de array consistente
-        "useConst": "warn", // TypeScript Standard: Usar const cuando sea posible
-        "useEnumInitializers": "warn", // TypeScript Standard: Inicializadores en enums
-        "useForOf": "warn", // TypeScript Standard: Usar for...of
-        "useImportType": "warn", // TypeScript Standard: Usar import type
-        "useLiteralEnumMembers": "warn", // TypeScript Standard: Miembros literales en enums
-        "useNodejsImportProtocol": "warn", // TypeScript Standard: Protocolo de import de Node.js
-        "useNumberNamespace": "warn", // TypeScript Standard: Usar Number namespace
-        "useNumericLiterals": "warn", // TypeScript Standard: Usar literales numéricos
-        "useSelfClosingElements": "warn", // TypeScript Standard: Elementos auto-cerrados
-        "useShorthandArrayType": "warn", // TypeScript Standard: Tipo de array abreviado
-        "useShorthandAssign": "warn", // TypeScript Standard: Asignación abreviada
-        "useSingleCaseStatement": "warn", // TypeScript Standard: Una declaración por case
-        "useSingleVarDeclarator": "warn", // TypeScript Standard: Un declarador por variable
-        "useTemplate": "warn", // TypeScript Standard: Usar template literals
-        "useWhile": "warn", // TypeScript Standard: Usar while apropiadamente
+        "noRestrictedGlobals": "warn", // TypeScript Standard: No restricted globals
+        "noShoutyConstants": "warn", // TypeScript Standard: No all-caps constants
+        "noVar": "warn", // TypeScript Standard: Do not use var
+        "useAsConstAssertion": "warn", // TypeScript Standard: Use as const
+        "useBlockStatements": "warn", // TypeScript Standard: Use block statements
+        "useCollapsedElseIf": "warn", // TypeScript Standard: Use collapsed else if
+        "useConsistentArrayType": "warn", // TypeScript Standard: Consistent array type
+        "useConst": "warn", // TypeScript Standard: Use const whenever possible
+        "useEnumInitializers": "warn", // TypeScript Standard: Enum initializers
+        "useForOf": "warn", // TypeScript Standard: Use for...of
+        "useImportType": "warn", // TypeScript Standard: Use import type
+        "useLiteralEnumMembers": "warn", // TypeScript Standard: Literal enum members
+        "useNodejsImportProtocol": "warn", // TypeScript Standard: Node.js import protocol
+        "useNumberNamespace": "warn", // TypeScript Standard: Use Number namespace
+        "useNumericLiterals": "warn", // TypeScript Standard: Use numeric literals
+        "useSelfClosingElements": "warn", // TypeScript Standard: Self-closing elements
+        "useShorthandArrayType": "warn", // TypeScript Standard: Shorthand array type
+        "useShorthandAssign": "warn", // TypeScript Standard: Shorthand assignment
+        "useSingleCaseStatement": "warn", // TypeScript Standard: One statement per case
+        "useSingleVarDeclarator": "warn", // TypeScript Standard: One declarator per variable
+        "useTemplate": "warn", // TypeScript Standard: Use template literals
+        "useWhile": "warn", // TypeScript Standard: Use while appropriately
         "useExponentiationOperator": "off", // Obscure and arguably not easily readable
         "noUnusedTemplateLiteral": "off", // Stylistic opinion
         "noUselessElse": "off" // Stylistic opinion
       },
       "suspicious": {
-        "noExplicitAny": "warn", // TypeScript Standard: Evitar uso de 'any' explícito
-        "noArrayIndexKey": "warn", // TypeScript Standard: Evitar usar índices de array como keys
-        "noAssignInExpressions": "warn", // TypeScript Standard: Evitar asignaciones en expresiones
-        "noAsyncPromiseExecutor": "warn", // TypeScript Standard: Evitar async en Promise executor
-        "noCatchAssign": "warn", // TypeScript Standard: No reasignar parámetros de catch
-        "noClassAssign": "warn", // TypeScript Standard: No reasignar clases
-        "noCommentText": "warn", // TypeScript Standard: Evitar texto en comentarios HTML
-        "noCompareNegZero": "warn", // TypeScript Standard: No comparar con -0
-        "noConsoleLog": "off", // Permitir console.log en desarrollo
-        "noControlCharactersInRegex": "warn", // TypeScript Standard: No caracteres de control en regex
-        "noDebugger": "warn", // TypeScript Standard: No usar debugger
-        "noDuplicateCase": "warn", // TypeScript Standard: No casos duplicados en switch
-        "noDuplicateClassMembers": "warn", // TypeScript Standard: No miembros duplicados en clases
-        "noDuplicateObjectKeys": "warn", // TypeScript Standard: No claves duplicadas en objetos
-        "noDuplicateParameters": "warn", // TypeScript Standard: No parámetros duplicados
-        "noEmptyBlockStatements": "warn", // TypeScript Standard: No bloques vacíos
-        "noFallthroughSwitchClause": "warn", // TypeScript Standard: No fallthrough en switch
-        "noFunctionAssign": "warn", // TypeScript Standard: No reasignar funciones
-        "noImportAssign": "warn", // TypeScript Standard: No reasignar imports
-        "noLabelVar": "warn", // TypeScript Standard: No variables con nombres de labels
-        "noMisleadingCharacterClass": "warn", // TypeScript Standard: No clases de caracteres confusas
-        "noPrototypeBuiltins": "warn", // TypeScript Standard: No usar métodos de prototype directamente
-        "noRedeclare": "warn", // TypeScript Standard: No redeclarar variables
-        "noShadowRestrictedNames": "warn", // TypeScript Standard: No sombrear nombres restringidos
-        "noUnsafeNegation": "warn" // TypeScript Standard: No negación insegura
+        "noExplicitAny": "warn", // TypeScript Standard: Avoid explicit any
+        "noArrayIndexKey": "warn", // TypeScript Standard: Avoid using array indexes as keys
+        "noAssignInExpressions": "warn", // TypeScript Standard: Avoid assignments in expressions
+        "noAsyncPromiseExecutor": "warn", // TypeScript Standard: Avoid async Promise executors
+        "noCatchAssign": "warn", // TypeScript Standard: Do not reassign catch parameters
+        "noClassAssign": "warn", // TypeScript Standard: Do not reassign classes
+        "noCommentText": "warn", // TypeScript Standard: Avoid text in HTML comments
+        "noCompareNegZero": "warn", // TypeScript Standard: Do not compare against -0
+        "noConsoleLog": "off", // Allow console.log during development
+        "noControlCharactersInRegex": "warn", // TypeScript Standard: No control characters in regex
+        "noDebugger": "warn", // TypeScript Standard: Do not use debugger
+        "noDuplicateCase": "warn", // TypeScript Standard: No duplicate switch cases
+        "noDuplicateClassMembers": "warn", // TypeScript Standard: No duplicate class members
+        "noDuplicateObjectKeys": "warn", // TypeScript Standard: No duplicate object keys
+        "noDuplicateParameters": "warn", // TypeScript Standard: No duplicate parameters
+        "noEmptyBlockStatements": "warn", // TypeScript Standard: No empty blocks
+        "noFallthroughSwitchClause": "warn", // TypeScript Standard: No switch fallthrough
+        "noFunctionAssign": "warn", // TypeScript Standard: Do not reassign functions
+        "noImportAssign": "warn", // TypeScript Standard: Do not reassign imports
+        "noLabelVar": "warn", // TypeScript Standard: No variables named like labels
+        "noMisleadingCharacterClass": "warn", // TypeScript Standard: No misleading character classes
+        "noPrototypeBuiltins": "warn", // TypeScript Standard: Do not call prototype methods directly
+        "noRedeclare": "warn", // TypeScript Standard: Do not redeclare variables
+        "noShadowRestrictedNames": "warn", // TypeScript Standard: Do not shadow restricted names
+        "noUnsafeNegation": "warn" // TypeScript Standard: No unsafe negation
       },
       "nursery": {
         "noStaticElementInteractions": "warn",

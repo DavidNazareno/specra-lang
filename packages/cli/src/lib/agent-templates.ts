@@ -22,10 +22,11 @@ When this repository contains \`specra/\`, treat the \`.scl.md\` files in that f
    - \`.specra/ctx.json\`
    - \`.specra/plan.json\`
    - \`.specra/specra.db\`
-4. Use the spec plus those compact artifacts as implementation guidance.
-5. When validating behavior, execute the app tests or reproduction steps yourself.
-6. Convert the observed behavior into \`.specra/verify/proof.json\`.
-7. Run \`specra verify\` or \`specra verify --results .specra/verify/proof.json\`.
+4. Run \`specra proof\` to scaffold \`.specra/verify/proof.json\`.
+5. Use the spec plus those compact artifacts as implementation guidance.
+6. When validating behavior, execute the app tests or reproduction steps yourself.
+7. Replace the \`__fill__\` placeholders in \`.specra/verify/proof.json\` with what the tests actually observed.
+8. Run \`specra verify\` or \`specra verify --results .specra/verify/proof.json\`.
 
 ## Operating rules
 

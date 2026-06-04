@@ -1,6 +1,6 @@
-# @specra/cli
+# specra
 
-CLI for Specra contract authoring, agent guidance, compact runtime generation, and verification.
+Public Specra package for contract authoring, agent guidance, compact runtime generation, and verification.
 
 Typical flow:
 

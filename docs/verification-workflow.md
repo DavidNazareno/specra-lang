@@ -27,9 +27,10 @@ When a project uses `specra install`, the generated agent guidance should direct
 
 1. read the relevant `.scl.md` files under `specra/`
 2. refresh `.specra/` with `specra refresh`
-3. run the app's tests or reproduction steps
-4. write `.specra/verify/proof.json`
-5. call `specra verify` or `specra verify --results .specra/verify/proof.json`
+3. scaffold `.specra/verify/proof.json` with `specra proof`
+4. run the app's tests or reproduction steps
+5. replace the `__fill__` placeholders in `.specra/verify/proof.json`
+6. call `specra verify` or `specra verify --results .specra/verify/proof.json`
 
 ## 3. Observed implementation results
 
@@ -54,7 +55,7 @@ pnpm specra extract-typescript examples/imports-app --impl tests/fixtures/typesc
 4. Verify observed behavior against the spec:
 
 ```bash
-pnpm specra verify examples/imports-app --results tests/fixtures/observed-results.json
+pnpm specra verify examples/imports-app --results .specra/verify/proof.json
 ```
 
 ## Current verifier model
