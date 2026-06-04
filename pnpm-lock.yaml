@@ -37,16 +37,16 @@ importers:
       '@clack/prompts':
         specifier: ^1.4.0
         version: 1.4.0
-      '@specra/ast':
+      '@specra-lang/ast':
         specifier: workspace:*
         version: link:../ast
-      '@specra/core':
+      '@specra-lang/core':
         specifier: workspace:*
         version: link:../core
-      '@specra/ir':
+      '@specra-lang/ir':
         specifier: workspace:*
         version: link:../ir
-      '@specra/verifier':
+      '@specra-lang/verifier':
         specifier: workspace:*
         version: link:../verifier
       commander:
@@ -71,22 +71,22 @@ importers:
 
   packages/core:
     dependencies:
-      '@specra/ast':
+      '@specra-lang/ast':
         specifier: workspace:*
         version: link:../ast
 
   packages/ir:
     dependencies:
-      '@specra/ast':
+      '@specra-lang/ast':
         specifier: workspace:*
         version: link:../ast
 
   packages/verifier:
     dependencies:
-      '@specra/ast':
+      '@specra-lang/ast':
         specifier: workspace:*
         version: link:../ast
-      '@specra/ir':
+      '@specra-lang/ir':
         specifier: workspace:*
         version: link:../ir
 

@@ -1,11 +1,11 @@
 import { DatabaseSync } from 'node:sqlite'
 
-import type { SpecraDocument } from '@specra/ast'
-import type { SpecraModel, VerificationCase } from '@specra/ir'
+import type { SpecraDocument } from '@specra-lang/ast'
+import type { SpecraModel, VerificationCase } from '@specra-lang/ir'
 import type {
   ObservedExpectationResult,
   VerificationReport,
-} from '@specra/verifier'
+} from '@specra-lang/verifier'
 
 export interface StateArtifacts {
   ctx: string

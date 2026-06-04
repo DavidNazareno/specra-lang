@@ -5,7 +5,7 @@ import type {
   SpecraDocument,
   SpecraExpectation,
   SpecraOperation,
-} from '@specra/ast'
+} from '@specra-lang/ast'
 
 import {
   authModes,

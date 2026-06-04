@@ -1,4 +1,4 @@
-import type { ScalarValue } from '@specra/ast'
+import type { ScalarValue } from '@specra-lang/ast'
 
 import type { ObservedExpectationResult } from './types.js'
 

@@ -1,6 +1,6 @@
-import type { parseDocument } from '@specra/core'
-import { createVerificationPlan, normalizeDocument } from '@specra/ir'
-import type { ObservedExpectationResult } from '@specra/verifier'
+import type { parseDocument } from '@specra-lang/core'
+import { createVerificationPlan, normalizeDocument } from '@specra-lang/ir'
+import type { ObservedExpectationResult } from '@specra-lang/verifier'
 
 import type { GeneratedFile } from '../types.js'
 import { contextFileName, planFileName } from '../config.js'

@@ -3,7 +3,7 @@ import type {
   SpecraEntity,
   SpecraExpectation,
   SpecraOperation,
-} from '@specra/ast'
+} from '@specra-lang/ast'
 
 import {
   assignKeyValue,

@@ -10,10 +10,10 @@
     },
     "test": {
       "dependsOn": [
-        "@specra/ast:build",
-        "@specra/core:build",
-        "@specra/ir:build",
-        "@specra/verifier:build",
+        "@specra-lang/ast:build",
+        "@specra-lang/core:build",
+        "@specra-lang/ir:build",
+        "@specra-lang/verifier:build",
         "specra-lang:build"
       ],
       "command": "node --test tests/**/*.test.mjs"

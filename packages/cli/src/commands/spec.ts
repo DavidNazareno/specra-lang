@@ -1,11 +1,11 @@
 import path from 'node:path'
 
-import { validateDocument } from '@specra/core'
-import { createVerificationPlan, normalizeDocument } from '@specra/ir'
+import { validateDocument } from '@specra-lang/core'
+import { createVerificationPlan, normalizeDocument } from '@specra-lang/ir'
 import {
   renderVerificationReport,
   verifyObservedResults,
-} from '@specra/verifier'
+} from '@specra-lang/verifier'
 import type { CliOptions } from '../types.js'
 import { ensureDir, readTextFile, writeTextFile } from '../lib/fs.js'
 import {

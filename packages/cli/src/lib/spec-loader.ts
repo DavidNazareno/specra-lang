@@ -1,7 +1,7 @@
 import path from 'node:path'
 
-import type { ScalarValue, SpecraDocument } from '@specra/ast'
-import { parseDocument } from '@specra/core'
+import type { ScalarValue, SpecraDocument } from '@specra-lang/ast'
+import { parseDocument } from '@specra-lang/core'
 import { glob } from 'tinyglobby'
 
 import { defaultSpecDir } from '../config.js'

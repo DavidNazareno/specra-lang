@@ -4,7 +4,7 @@ import type {
   SpecraEntity,
   SpecraExpectation,
   SpecraOperation,
-} from '@specra/ast'
+} from '@specra-lang/ast'
 
 export interface SpecraFieldModel {
   name: string

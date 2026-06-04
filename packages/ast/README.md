@@ -1,4 +1,4 @@
-# @specra/ast
+# @specra-lang/ast
 
 Syntax-level document types for Specra contracts.
 

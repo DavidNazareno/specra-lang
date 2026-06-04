@@ -1,4 +1,4 @@
-# @specra/ir
+# @specra-lang/ir
 
 Normalized semantic model and verification planning for Specra.
 

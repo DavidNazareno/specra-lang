@@ -1,4 +1,4 @@
-# @specra/verifier
+# @specra-lang/verifier
 
 Expectation verification engine for Specra.
 
