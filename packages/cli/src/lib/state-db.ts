@@ -1,33 +1,33 @@
-import { DatabaseSync } from "node:sqlite";
+import { DatabaseSync } from 'node:sqlite'
 
-import type { SpecraDocument } from "@specra/ast";
-import type { SpecraModel, VerificationCase } from "@specra/ir";
+import type { SpecraDocument } from '@specra/ast'
+import type { SpecraModel, VerificationCase } from '@specra/ir'
 import type {
   ObservedExpectationResult,
   VerificationReport,
-} from "@specra/verifier";
+} from '@specra/verifier'
 
 export interface StateArtifacts {
-  ctx: string;
-  plan: string;
-  proof?: string;
-  report?: string;
+  ctx: string
+  plan: string
+  proof?: string
+  report?: string
 }
 
 export interface StateSnapshot {
-  document: SpecraDocument;
-  model: SpecraModel;
-  verificationPlan: VerificationCase[];
-  artifacts?: StateArtifacts;
-  observedResults?: ObservedExpectationResult[];
-  verificationReport?: VerificationReport;
+  document: SpecraDocument
+  model: SpecraModel
+  verificationPlan: VerificationCase[]
+  artifacts?: StateArtifacts
+  observedResults?: ObservedExpectationResult[]
+  verificationReport?: VerificationReport
 }
 
 export function writeStateDatabase(
   dbPath: string,
   snapshot: StateSnapshot,
 ): void {
-  const db = new DatabaseSync(dbPath);
+  const db = new DatabaseSync(dbPath)
 
   try {
     db.exec(`
@@ -98,51 +98,49 @@ export function writeStateDatabase(
       );
 
       CREATE VIRTUAL TABLE search USING fts5(scope, name, body);
-    `);
+    `)
 
-    const insertMeta = db.prepare(
-      "INSERT INTO meta (key, value) VALUES (?, ?)",
-    );
-    insertMeta.run("service", snapshot.model.service ?? "");
-    insertMeta.run("goal", snapshot.model.goal);
-    insertMeta.run("contract_json", JSON.stringify(snapshot.document));
+    const insertMeta = db.prepare('INSERT INTO meta (key, value) VALUES (?, ?)')
+    insertMeta.run('service', snapshot.model.service ?? '')
+    insertMeta.run('goal', snapshot.model.goal)
+    insertMeta.run('contract_json', JSON.stringify(snapshot.document))
 
     const insertEntity = db.prepare(
-      "INSERT INTO entities (name, fields_json) VALUES (?, ?)",
-    );
+      'INSERT INTO entities (name, fields_json) VALUES (?, ?)',
+    )
     const insertOperation = db.prepare(
-      "INSERT INTO operations (name, input_json, output, primary_input) VALUES (?, ?, ?, ?)",
-    );
+      'INSERT INTO operations (name, input_json, output, primary_input) VALUES (?, ?, ?, ?)',
+    )
     const insertExpectation = db.prepare(
-      "INSERT INTO expectations (name, operation_name, auth, input_json, assertions_json) VALUES (?, ?, ?, ?, ?)",
-    );
+      'INSERT INTO expectations (name, operation_name, auth, input_json, assertions_json) VALUES (?, ?, ?, ?, ?)',
+    )
     const insertConstraint = db.prepare(
-      "INSERT INTO constraints (name, value_json) VALUES (?, ?)",
-    );
+      'INSERT INTO constraints (name, value_json) VALUES (?, ?)',
+    )
     const insertTarget = db.prepare(
-      "INSERT INTO targets (name, value_json) VALUES (?, ?)",
-    );
+      'INSERT INTO targets (name, value_json) VALUES (?, ?)',
+    )
     const insertArtifact = db.prepare(
-      "INSERT INTO artifacts (name, payload) VALUES (?, ?)",
-    );
+      'INSERT INTO artifacts (name, payload) VALUES (?, ?)',
+    )
     const insertObserved = db.prepare(
-      "INSERT INTO observed_results (expectation, outcome, output_json, notes_json) VALUES (?, ?, ?, ?)",
-    );
+      'INSERT INTO observed_results (expectation, outcome, output_json, notes_json) VALUES (?, ?, ?, ?)',
+    )
     const insertFinding = db.prepare(
-      "INSERT INTO verification_findings (expectation, status, message) VALUES (?, ?, ?)",
-    );
+      'INSERT INTO verification_findings (expectation, status, message) VALUES (?, ?, ?)',
+    )
     const insertSearch = db.prepare(
-      "INSERT INTO search (scope, name, body) VALUES (?, ?, ?)",
-    );
+      'INSERT INTO search (scope, name, body) VALUES (?, ?, ?)',
+    )
 
     for (const entity of snapshot.model.entities) {
-      const fields = entity.fields.map((field) => [field.name, field.type]);
-      insertEntity.run(entity.name, JSON.stringify(fields));
+      const fields = entity.fields.map((field) => [field.name, field.type])
+      insertEntity.run(entity.name, JSON.stringify(fields))
       insertSearch.run(
-        "entity",
+        'entity',
         entity.name,
-        `${entity.name} ${fields.map((field) => field.join(":")).join(" ")}`,
-      );
+        `${entity.name} ${fields.map((field) => field.join(':')).join(' ')}`,
+      )
     }
 
     for (const operation of snapshot.model.operations) {
@@ -151,12 +149,12 @@ export function writeStateDatabase(
         JSON.stringify(operation.input),
         operation.output,
         operation.primaryInput,
-      );
+      )
       insertSearch.run(
-        "operation",
+        'operation',
         operation.name,
-        `${operation.name} ${operation.input.join(" ")} ${operation.output}`,
-      );
+        `${operation.name} ${operation.input.join(' ')} ${operation.output}`,
+      )
     }
 
     for (const expectation of snapshot.model.expectations) {
@@ -166,29 +164,29 @@ export function writeStateDatabase(
         expectation.auth,
         JSON.stringify(expectation.input),
         JSON.stringify(expectation.assertions),
-      );
+      )
       insertSearch.run(
-        "expectation",
+        'expectation',
         expectation.name,
-        `${expectation.name} ${expectation.operation ?? ""} ${expectation.assertions
+        `${expectation.name} ${expectation.operation ?? ''} ${expectation.assertions
           .map((assertion) => `${assertion.target} ${String(assertion.value)}`)
-          .join(" ")}`,
-      );
+          .join(' ')}`,
+      )
     }
 
     for (const [key, value] of Object.entries(snapshot.model.constraints)) {
-      insertConstraint.run(key, JSON.stringify(value));
-      insertSearch.run("constraint", key, `${key} ${String(value)}`);
+      insertConstraint.run(key, JSON.stringify(value))
+      insertSearch.run('constraint', key, `${key} ${String(value)}`)
     }
 
     for (const [key, value] of Object.entries(snapshot.model.target)) {
-      insertTarget.run(key, JSON.stringify(value));
-      insertSearch.run("target", key, `${key} ${String(value)}`);
+      insertTarget.run(key, JSON.stringify(value))
+      insertSearch.run('target', key, `${key} ${String(value)}`)
     }
 
     if (snapshot.artifacts) {
       for (const [name, payload] of Object.entries(snapshot.artifacts)) {
-        insertArtifact.run(name, payload);
+        insertArtifact.run(name, payload)
       }
     }
 
@@ -198,13 +196,13 @@ export function writeStateDatabase(
         observed.outcome,
         observed.output ? JSON.stringify(observed.output) : null,
         observed.notes ? JSON.stringify(observed.notes) : null,
-      );
+      )
     }
 
     for (const finding of snapshot.verificationReport?.findings ?? []) {
-      insertFinding.run(finding.expectation, finding.status, finding.message);
+      insertFinding.run(finding.expectation, finding.status, finding.message)
     }
   } finally {
-    db.close();
+    db.close()
   }
 }

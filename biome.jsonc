@@ -9,6 +9,12 @@
     "lineWidth": 80,
     "attributePosition": "auto"
   },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "semicolons": "asNeeded"
+    }
+  },
   "linter": {
     "enabled": true,
     "rules": {

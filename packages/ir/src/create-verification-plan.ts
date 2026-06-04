@@ -1,4 +1,4 @@
-import type { SpecraModel, VerificationCase } from "./types.js";
+import type { SpecraModel, VerificationCase } from './types.js'
 
 export function createVerificationPlan(model: SpecraModel): VerificationCase[] {
   return model.expectations.map((expectation) => ({
@@ -7,5 +7,5 @@ export function createVerificationPlan(model: SpecraModel): VerificationCase[] {
     auth: expectation.auth,
     input: expectation.input,
     assertions: expectation.assertions,
-  }));
+  }))
 }

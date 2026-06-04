@@ -53,13 +53,6 @@ This document describes the parts of Specra that are considered stable enough to
 - `claude` for Claude Code
 - `codex` for Codex CLI and Codex agents
 
-## Not stable yet
-
-- Framework-specific extraction from live codebases
-- Richer type system features such as enums or lists
-- MCP integration
-- Editor integration and language server support
-
 ## Compatibility expectation
 
 For now, breaking changes are still possible, but the current `.scl.md` syntax and CLI flow should be treated as the baseline that new work must preserve unless a documented RFC changes it.

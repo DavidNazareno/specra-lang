@@ -79,5 +79,5 @@ end
 - Legacy inline operation syntax like \`operation createThing(Input) -> Output\` is still supported
 - The contract is the source of truth when implementation and spec disagree
 - \`proof.json\` is evidence provided by the agent from tests or reproduction steps, not by static code inspection
-`;
+`
 }

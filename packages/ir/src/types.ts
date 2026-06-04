@@ -4,58 +4,58 @@ import type {
   SpecraEntity,
   SpecraExpectation,
   SpecraOperation,
-} from "@specra/ast";
+} from '@specra/ast'
 
 export interface SpecraFieldModel {
-  name: string;
-  type: string;
+  name: string
+  type: string
 }
 
 export interface SpecraEntityModel {
-  name: string;
-  fields: SpecraFieldModel[];
-  fieldMap: Record<string, SpecraFieldModel>;
+  name: string
+  fields: SpecraFieldModel[]
+  fieldMap: Record<string, SpecraFieldModel>
 }
 
 export interface SpecraOperationModel {
-  name: string;
-  input: string[];
-  output: string;
-  primaryInput: string | null;
+  name: string
+  input: string[]
+  output: string
+  primaryInput: string | null
 }
 
 export interface SpecraExpectationModel {
-  name: string;
-  operation: string | null;
-  auth: string;
-  input: Record<string, ScalarValue>;
+  name: string
+  operation: string | null
+  auth: string
+  input: Record<string, ScalarValue>
   assertions: Array<{
-    target: string;
-    value: ScalarValue;
-  }>;
+    target: string
+    value: ScalarValue
+  }>
 }
 
 export interface SpecraModel {
-  service: string | null;
-  goal: string;
-  entities: SpecraEntityModel[];
-  entityMap: Record<string, SpecraEntityModel>;
-  operations: SpecraOperationModel[];
-  operationMap: Record<string, SpecraOperationModel>;
-  expectations: SpecraExpectationModel[];
-  constraints: Record<string, ScalarValue>;
-  target: Record<string, ScalarValue>;
+  service: string | null
+  goal: string
+  entities: SpecraEntityModel[]
+  entityMap: Record<string, SpecraEntityModel>
+  operations: SpecraOperationModel[]
+  operationMap: Record<string, SpecraOperationModel>
+  expectations: SpecraExpectationModel[]
+  constraints: Record<string, ScalarValue>
+  target: Record<string, ScalarValue>
 }
 
 export interface VerificationCase {
-  expectation: string;
-  operation: string | null;
-  auth: string;
-  input: Record<string, ScalarValue>;
+  expectation: string
+  operation: string | null
+  auth: string
+  input: Record<string, ScalarValue>
   assertions: Array<{
-    target: string;
-    value: ScalarValue;
-  }>;
+    target: string
+    value: ScalarValue
+  }>
 }
 
 export type {
@@ -64,4 +64,4 @@ export type {
   SpecraEntity,
   SpecraExpectation,
   SpecraOperation,
-};
+}

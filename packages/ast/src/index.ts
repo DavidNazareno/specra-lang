@@ -7,4 +7,4 @@ export type {
   SpecraExpectation,
   SpecraField,
   SpecraOperation,
-} from "./types.js";
+} from './types.js'

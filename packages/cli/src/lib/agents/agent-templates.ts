@@ -3,10 +3,10 @@ import {
   managedBlockEnd,
   managedBlockStart,
   type SupportedTarget,
-} from "../agents/agent-targets.js";
+} from '../agents/agent-targets.js'
 
 export function renderManagedInstructionBlock(target: SupportedTarget): string {
-  const definition = getTargetDefinition(target);
+  const definition = getTargetDefinition(target)
 
   return `${managedBlockStart}
 # Specra for ${definition.title}
@@ -35,5 +35,5 @@ When this repository contains \`specra/\`, treat the \`.scl.md\` files in that f
 - If tests pass but \`specra verify\` fails, treat the Specra contract as unresolved work.
 - If \`specra/\` does not exist yet, suggest running \`specra init\`.
 ${managedBlockEnd}
-`;
+`
 }

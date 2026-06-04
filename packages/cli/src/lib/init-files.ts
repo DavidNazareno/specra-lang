@@ -1,22 +1,22 @@
-import path from "node:path";
+import path from 'node:path'
 
 import type {
   GeneratedFile,
   InitProjectMetadata,
   InitTemplate,
-} from "../types.js";
+} from '../types.js'
 export function createInitFiles(
   metadata: InitProjectMetadata,
   template: InitTemplate,
 ): GeneratedFile[] {
-  const isHelloWorld = template === "hello-world";
-  const featureFileName = "hello-world.scl.md";
-  const featureTitle = "Hello World";
+  const isHelloWorld = template === 'hello-world'
+  const featureFileName = 'hello-world.scl.md'
+  const featureTitle = 'Hello World'
   const serviceDescription = isHelloWorld
-    ? "This root contract file imports a tiny hello-world example so you can test the full Specra loop quickly."
-    : "This root contract file gives you the smallest possible Specra contract so you can shape it to your app without pre-imposed structure.";
+    ? 'This root contract file imports a tiny hello-world example so you can test the full Specra loop quickly.'
+    : 'This root contract file gives you the smallest possible Specra contract so you can shape it to your app without pre-imposed structure.'
   const featureDescription =
-    "This feature file gives you the smallest useful example of a Specra contract.";
+    'This feature file gives you the smallest useful example of a Specra contract.'
 
   const serviceSpec = `# ${metadata.displayName}
 
@@ -49,7 +49,7 @@ end
 target runtime: ${metadata.runtime}
 target database: ${metadata.database}
 \`\`\`
-`;
+`
 
   const helloWorldRootSpec = `# ${metadata.displayName}
 
@@ -66,7 +66,7 @@ constraint auth_required: true
 target runtime: ${metadata.runtime}
 target database: ${metadata.database}
 \`\`\`
-`;
+`
 
   const featureSpec = isHelloWorld
     ? `# ${featureTitle}
@@ -122,7 +122,7 @@ input title: "First item"
 expect outcome: unauthorized
 end
 \`\`\`
-`;
+`
 
   const guide = `# Specra
 
@@ -146,28 +146,28 @@ Keep the source contract here and let Specra write generated artifacts to \`.spe
 - Specra already validates \`.scl.md\`, writes compact runtime state, and verifies observed results.
 - Extraction from real Next.js tests is not automatic yet. For now, let your coding agent bridge from tests into \`proof.json\`.
 - The goal of this folder is to keep the contract next to the app source, inside the same repository, with minimal visible footprint.
-`;
+`
 
   return [
     {
-      path: path.join(".specra", ".gitignore"),
-      content: "*\n!.gitignore\n",
+      path: path.join('.specra', '.gitignore'),
+      content: '*\n!.gitignore\n',
     },
     {
-      path: path.join("specra", "README.md"),
+      path: path.join('specra', 'README.md'),
       content: guide,
     },
     {
-      path: path.join("specra", "spec.scl.md"),
+      path: path.join('specra', 'spec.scl.md'),
       content: isHelloWorld ? helloWorldRootSpec : serviceSpec,
     },
     ...(isHelloWorld
       ? [
           {
-            path: path.join("specra", "features", featureFileName),
+            path: path.join('specra', 'features', featureFileName),
             content: featureSpec,
           },
         ]
       : []),
-  ];
+  ]
 }

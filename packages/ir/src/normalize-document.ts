@@ -3,18 +3,18 @@ import type {
   SpecraEntity,
   SpecraExpectation,
   SpecraOperation,
-} from "./types.js";
+} from './types.js'
 import type {
   SpecraEntityModel,
   SpecraExpectationModel,
   SpecraModel,
   SpecraOperationModel,
-} from "./types.js";
+} from './types.js'
 
 export function normalizeDocument(document: SpecraDocument): SpecraModel {
-  const entities = document.entities.map(createEntityModel);
-  const operations = document.operations.map(createOperationModel);
-  const expectations = document.expectations.map(createExpectationModel);
+  const entities = document.entities.map(createEntityModel)
+  const operations = document.operations.map(createOperationModel)
+  const expectations = document.expectations.map(createExpectationModel)
 
   return {
     service: document.service,
@@ -30,16 +30,16 @@ export function normalizeDocument(document: SpecraDocument): SpecraModel {
     expectations,
     constraints: document.constraints,
     target: document.target,
-  };
+  }
 }
 
 function createEntityModel(entity: SpecraEntity): SpecraEntityModel {
-  const fields = entity.fields.map((field) => ({ ...field }));
+  const fields = entity.fields.map((field) => ({ ...field }))
   return {
     name: entity.name,
     fields,
     fieldMap: Object.fromEntries(fields.map((field) => [field.name, field])),
-  };
+  }
 }
 
 function createOperationModel(
@@ -50,7 +50,7 @@ function createOperationModel(
     input: [...operation.input],
     output: operation.output,
     primaryInput: operation.input[0] ?? null,
-  };
+  }
 }
 
 function createExpectationModel(
@@ -59,8 +59,8 @@ function createExpectationModel(
   return {
     name: expectation.name,
     operation: expectation.operation,
-    auth: expectation.auth ?? "optional",
+    auth: expectation.auth ?? 'optional',
     input: { ...expectation.input },
     assertions: expectation.assertions.map((assertion) => ({ ...assertion })),
-  };
+  }
 }

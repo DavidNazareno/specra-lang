@@ -1,5 +1,5 @@
-export { createVerificationPlan } from "./create-verification-plan.js";
-export { normalizeDocument } from "./normalize-document.js";
+export { createVerificationPlan } from './create-verification-plan.js'
+export { normalizeDocument } from './normalize-document.js'
 export type {
   ScalarValue,
   SpecraDocument,
@@ -12,4 +12,4 @@ export type {
   SpecraOperation,
   SpecraOperationModel,
   VerificationCase,
-} from "./types.js";
+} from './types.js'
