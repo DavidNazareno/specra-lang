@@ -1,6 +1,6 @@
 {
   "name": "specra-lang",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "CLI for Specra contract authoring, agent guidance, and verification.",
   "license": "MIT",
   "type": "module",
