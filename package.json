@@ -1,13 +1,13 @@
 {
-  "name": "specra-lang",
+  "name": "specra-workspace",
   "version": "0.1.0",
   "description": "Specra language for contract-driven AI coding and verification.",
   "license": "MIT",
-  "private": false,
+  "private": true,
   "packageManager": "pnpm@10.33.0",
   "scripts": {
-    "build": "nx run-many -t build --all --exclude specra-lang,specra-workspace",
-    "check": "nx run-many -t check --all --exclude specra-lang,specra-workspace",
+    "build": "nx run-many -t build --all --exclude specra-workspace",
+    "check": "nx run-many -t check --all --exclude specra-workspace",
     "changeset": "changeset",
     "dev:cli": "pnpm --filter specra-lang dev",
     "docs:build": "vitepress build docs",
@@ -19,7 +19,7 @@
     "specra-lang": "node packages/cli/dist/index.js",
     "test": "nx run specra-workspace:test",
     "version-packages": "changeset version && pnpm format",
-    "release": "changeset publish",
+    "release": "pnpm build && changeset publish",
     "prepare": "husky"
   },
   "devDependencies": {

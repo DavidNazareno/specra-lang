@@ -19,7 +19,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "check": "tsc -p tsconfig.json --noEmit",
-    "dev": "node --enable-source-maps dist/index.js"
+    "dev": "node --enable-source-maps dist/index.js",
+    "prepack": "pnpm build"
   },
   "dependencies": {
     "@clack/prompts": "^1.4.0",
