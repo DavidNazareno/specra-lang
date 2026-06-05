@@ -1,6 +1,6 @@
 {
   "name": "@specra-lang/ir",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Normalized semantic model and verification planning for Specra.",
   "license": "MIT",
   "type": "module",
