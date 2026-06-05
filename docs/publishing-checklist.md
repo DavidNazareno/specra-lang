@@ -17,6 +17,7 @@ Use this checklist before creating the public GitHub repository.
 - Run `pnpm lint`
 - Run `pnpm test`
 - Run `pnpm docs:build`
+- Run `pnpm smoke:publish`
 - Run `pnpm specra-lang check examples/imports-app`
 - Run `pnpm specra-lang refresh examples/imports-app`
 - Run `pnpm specra-lang proof examples/imports-app`
