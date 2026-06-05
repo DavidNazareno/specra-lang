@@ -21,7 +21,8 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "check": "tsc -p tsconfig.json --noEmit"
+    "check": "tsc -p tsconfig.json --noEmit",
+    "prepack": "pnpm build"
   },
   "dependencies": {
     "@specra-lang/ast": "workspace:*"
