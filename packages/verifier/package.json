@@ -1,6 +1,6 @@
 {
   "name": "@specra-lang/verifier",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Expectation verification engine for Specra.",
   "license": "MIT",
   "type": "module",
