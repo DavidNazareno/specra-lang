@@ -16,6 +16,7 @@
     "lint": "nx run specra-workspace:lint",
     "format": "nx run specra-workspace:format",
     "graph": "nx graph --open=false",
+    "smoke:publish": "node tests/publish-smoke.mjs",
     "specra-lang": "node packages/cli/dist/index.js",
     "test": "nx run specra-workspace:test",
     "version-packages": "changeset version && pnpm format",
